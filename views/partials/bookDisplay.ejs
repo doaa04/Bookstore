@@ -1,0 +1,29 @@
+<div class="book">
+    <div class="bookCover">
+        <img src="/covers/<%= book.imageUrl %>">
+    </div>
+    <div class="bookInfo">
+        <a href="/admin/book/<%= book._id %>">
+            <h4><%= book.title %></h4>
+        </a>
+        <p>By <%= book.author %></p>
+        <p>Language: <%= book.language %></p>
+        <p><%= book.pages %> pages</p>
+        <p>Year: <%= book.year %></p>
+        <% if (book.edition) { %>
+            <p><%= book.edition %></p>
+        <% } %>
+        <% if (book.series) { %>
+            <p><strong>Part of series: </strong><%= book.series %></p>
+        <% } %>
+        <% if (book.categories) { %>
+            <% const categoriesArray = JSON.parse(book.categories); %>
+            <% const categoriesString = categoriesArray.join(", "); %>
+                <p><%= categoriesString %></p>
+        <% } %>
+        <p><strong><%= book.price %></strong> $</p>
+        <% if (book.availableCopies == 0) { %>
+            <p>Unavailable</p>
+        <% } %>
+    </div>
+</div>

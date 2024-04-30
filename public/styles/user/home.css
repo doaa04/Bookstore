@@ -1,0 +1,30 @@
+.books {
+    display: flex;
+    flex-flow: row wrap;
+}
+.book {
+    margin: 1px;
+    display: flex;
+    width: 350px;
+}
+.bookCover img {
+    height: 170px;
+    width: 110px;
+    border-radius: 10px;
+    margin: 5px;
+}
+.bookInfo {
+    margin: 10px;
+    font-size: 15px;
+}
+.bookInfo a {
+    text-decoration: none;
+}
+.bookInfo h4 {
+    margin-bottom: 7px;
+    color: dimgrey;
+    font-size: 15px;
+}
+.bookInfo a h4:hover {
+    color: rgba(0, 0, 0, 1);
+}

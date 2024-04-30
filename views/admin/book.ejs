@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | <%= book.title %></title>
+    <link rel="stylesheet" href="/styles/user/book.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <div class="book">
+            <div class="coverAndDetails">
+                <div>
+                    <img class="bookCover" src="/covers/<%= book.imageUrl %>" alt="Book Cover">
+                </div>
+                <div class="nextCover">
+                    <div class="bookDetails">
+                        <h2><%= book.title %></h2>
+                        <div class="sepLine"></div>
+                        <p><strong>By </strong> <%= book.author %></p>
+                        <p><strong>Language : </strong>><%= book.language %></p>
+                        <p><%= book.pages %> pages</p>
+                        <p><strong>Year : </strong><%= book.year %></p>
+                        <% if (book.edition) { %>
+                            <p><%= book.edition %></p>
+                        <% } %>
+                        <% if (book.series) { %>
+                            <p><strong>Part of series: </strong><%= book.series %></p>
+                        <% } %>
+                        <% if (book.categories) { %>
+                            <% const categoriesArray = JSON.parse(book.categories); %>
+                            <% const categoriesString = categoriesArray.join(", "); %>
+                                <p><%= categoriesString %></p>
+                        <% } %>
+                        <p><strong><%= book.price %></strong> $</p>
+                    </div>
+                    <div class="options">
+                        <a href="/admin/home" class="deleteBook" data-doc="<%= book._id %>">Delete Book</a>
+                    </div>
+                </div>
+            </div>
+            <div class="bookDescription">
+                <h2>Book Description</h2>
+                <div class="sepLine"></div>
+                <p style="white-space: pre-line;"><%= book.description %></p>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    
+</body>
+
+</html>
+
+<style>
+    .nextCover {
+        display: block;
+    }
+    .options {
+        margin: 20px;
+    }
+    .deleteBook {
+        background-color: rgba(255, 210, 0, 1);
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+    .deleteBook:hover {
+        background-color: rgb(0, 0, 0);
+        color: white;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deleteButton = document.querySelector('.deleteBook');
+
+        if (deleteButton) {
+            deleteButton.addEventListener('click', (event) => {
+                event.preventDefault(); 
+
+                const bookId = deleteButton.getAttribute('data-doc');
+                // Send delete request to the server
+                fetch(`/admin/home/${bookId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/admin/home';
+                    } else {
+                        console.error('Error deleting book:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting book:', error);
+                });
+            });
+        }
+    });
+</script>

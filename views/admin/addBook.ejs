@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | New book</title>
+    <link rel="stylesheet" href="/styles/admin/addBook.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <h1>Add a new book</h1>
+        <form class="addBookForm" action="/admin/addBook" method="POST" enctype="multipart/form-data">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required><br>
+
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required><br>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea><br>
+
+            <label for="language">Language:</label>
+            <input type="text" id="language" name="language" required><br>
+
+            <label for="pages">Pages:</label>
+            <input type="text" id="pages" name="pages" required><br>
+
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year"><br>
+
+            <label for="edition">Edition:</label>
+            <input type="text" id="edition" name="edition"><br>
+
+            <label for="series">Series:</label>
+            <input type="text" id="series" name="series"><br>
+
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required><br>
+
+            <label for="availableCopies">Available Copies:</label>
+            <input type="text" id="availableCopies" name="availableCopies" required><br>
+
+            <label for="cover">Book Cover Image:</label>
+            <input type="file" id="cover" name="cover" accept="image/*" required><br>
+
+            <input type="hidden" id="selectedCategories" name="selectedCategories">
+            <div class="selectCategory">
+                <div class="selectCategoryButton">
+                    <label>Select Category <i class="fa-sharp fa-solid fa-caret-down" style="color: #000000;"></i> </label>
+                </div>
+                <ul class="categories">
+                    <% categories.forEach(category => { %>
+                        <li class="category">
+                            <span class="checkBox">
+                                <i class="fa-solid fa-check checkIcon" style="color: #000000;"></i>
+                            </span>
+                            <span class="categoryName"><%= category %></span>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+            
+            <button type="submit">Add Book</button>
+        </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
+
+<script>
+    // showing categories 
+    selectCategoryButton = document.querySelector(".selectCategoryButton");
+    selectCategoryButton.addEventListener("click", () => {
+        selectCategoryButton.classList.toggle("open");
+    })
+    
+    // collecting selected categories 
+    let selectedCategoriesList = [];
+    categories = document.querySelectorAll(".categories li");
+    categories.forEach(category => {
+        category.addEventListener("click", () => {
+            category.classList.toggle("checked");
+            const categoryName = category.querySelector(".categoryName").innerText.trim();
+            if (category.classList.contains("checked")) {
+                selectedCategoriesList.push(categoryName);
+            }
+            else {
+                const index = selectedCategoriesList.indexOf(categoryName);
+                if (index !== -1) {
+                    selectedCategoriesList.splice(index, 1);
+                }
+        }
+        })
+    })
+
+        // send form data + selected categories list to server 
+        const selectedCategoriesInput = document.getElementById('selectedCategories');
+        const form = document.querySelector('.addBookForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            selectedCategoriesInput.value = JSON.stringify(selectedCategoriesList);
+            form.submit();
+        });
+</script>

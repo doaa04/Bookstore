@@ -1,0 +1,108 @@
+.addBookForm {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.addBookForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.addBookForm input[type="text"],
+.addBookForm input[type="number"],
+.addBookForm textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.addBookForm input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.addBookForm button[type="submit"] {
+    background-color: rgb(188, 154, 2);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.addBookForm button[type="submit"]:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+@media (max-width: 600px) {
+    .addBookForm {
+        width: 100%;
+    }
+}
+
+.selectCategoryButton {
+    width: 140px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+
+.selectCategoryButton i {
+    margin-left: 5px;
+}
+
+.category {
+    position: relative;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.categories {
+    list-style: none;
+    padding: 5px;
+    display: none;
+}
+
+.selectCategoryButton.open ~ .categories {
+    display: block;
+}
+
+.category:hover {
+    background-color: #ebe8e8;
+}
+
+.checkBox {
+    border: #cac8c8 solid 1px;
+    border-radius: 7px;
+    margin-right: 10px;
+    justify-content: center;
+    align-items: center;
+    padding-left: 3px;
+    transition: all 0.3s ease-in-out;
+}
+
+.checkIcon {
+    font-size: 13px;
+    transform: scale(0);
+}
+
+.category.checked .checkIcon {
+    transform: scale(1);
+    transition: all 0.3s ease-in-out;
+}

@@ -1,0 +1,155 @@
+<div class="sidebar">
+    <ul>
+        <p>MENU</p>
+        <li>
+            <a href="/admin/dashboard">
+                <i class="fa-solid fa-gauge-high" style="color: #ffffff;"></i>
+                <span class="label">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/home">
+                <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+                <span class="label">Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-envelope" style="color: #ffffff;"></i>
+                <span class="label">Messages</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+                <span class="label">Account</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-sharp fa-solid fa-bell" style="color: #ffffff;"></i>
+                <span class="label">Notifications</span>
+            </a>
+        </li>
+        <li>
+            <a href="/admin/addBook">
+                <i class="fa-solid fa-book" style="color: #ffffff;"></i>
+                <span class="label">New book</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-user-plus" style="color: #ffffff;"></i>
+                <span class="label">Admins</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-sharp fa-solid fa-gear" style="color: #ffffff;"></i></i>
+                <span class="label">Settings</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+                <span class="label">Log Out</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .sidebar {
+        height: 100%;
+        width: 80px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: rgb(0, 0, 0);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 1) 28%, rgba(255, 210, 0, 1) 100%);
+        margin-top: 70px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: 0.5s;
+        align-items: center;
+    }
+
+    .sidebar:hover {
+        width: 200px;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        padding-top: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        background-color: transparent;
+        width: 90%;
+        height: 450px;
+        border-radius: 5px;
+        backdrop-filter: blur(190px);
+        filter: brightness(120%);
+        box-shadow: inset 0 0 5px white;
+        border: rgba(0, 0, 0, 0.217) solid 0.5px;
+        position: relative;
+        align-items: center;
+    }
+
+    .sidebar ul p {
+        color: white;
+        margin: 10px;
+        padding-bottom: 10px;
+        border-bottom: white solid 1px;
+    }
+
+    .sidebar ul li {
+        list-style: none;
+        margin-top: 10px;
+        padding: 8px;
+        color: #fff;
+        text-align: center;
+        justify-content: space-between;
+    }
+
+    .sidebar ul li .label {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: white;
+    }
+
+    .sidebar ul p {
+        text-align: center;
+    }
+
+    .sidebar ul li a {
+        position: relative;
+        display: flex;
+        white-space: nowrap;
+    }
+
+    .sidebar ul li a i {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 60px;
+        margin-right: 8px;
+    }
+
+    .sidebar ul li:hover {
+        background-color: rgba(0, 0, 0, 1);
+    }
+
+    .label {
+        display: none;
+    }
+</style>
+
+<script src="https://kit.fontawesome.com/dcdd24e255.js" crossorigin="anonymous"></script>

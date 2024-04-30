@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Home</title>
+    <link rel="stylesheet" href="/styles/user/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <% let outOfStockExists = false; %>
+        <% if (books.length > 0) { %>
+            <% books.forEach(book => { %>
+                <% if (book.availableCopies == 0) { %>
+                    <% outOfStockExists = true; %>
+                <% } %>
+            <% }) %>
+        <% } %>
+        <% if (outOfStockExists) { %>
+            <div class="outOfStockTitle">
+                <h1>Books Out Of Stock</h1>
+            </div>
+            <div class="outOfStock">
+                <% if (books.length > 0) { %>
+                    <% books.forEach(book => { %>
+                        <% if (book.availableCopies == 0) { %>
+                            <%- include('../partials/bookDisplay', { book: book }) %>
+                        <% } %>
+                    <% }) %>
+                <% } %>
+            </div>
+        <% } %>
+        <h1>All Books</h1>
+        <div class="books">
+            <% if (books.length > 0) { %>
+                <% books.forEach(book => { %>
+                    <%- include('../partials/bookDisplay', { book: book }) %>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>

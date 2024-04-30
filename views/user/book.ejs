@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | <%= book.title %></title>
+    <link rel="stylesheet" href="/styles/user/book.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <div class="book">
+            <div class="coverAndDetails">
+                <div>
+                    <img class="bookCover" src="/covers/<%= book.imageUrl %>" alt="Book Cover">
+                </div>
+                <div class="bookDetails">
+                    <h2><%= book.title %>></h2>
+                    <div class="sepLine"></div>
+                    <p><strong>By </strong> <%= book.author %></p>
+                    <p><strong>Language : </strong>><%= book.language %></p>
+                    <p><%= book.pages %> pages</p>
+                    <p><strong>Year : </strong><%= book.year %></p>
+                    <% if (book.edition) { %>
+                        <p><%= book.edition %></p>
+                    <% } %>
+                    <% if (book.series) { %>
+                        <p><strong>Part of series: </strong><%= book.series %></p>
+                    <% } %>
+                    <% if (book.categories) { %>
+                        <% const categoriesArray = JSON.parse(book.categories); %>
+                        <% const categoriesString = categoriesArray.join(", "); %>
+                            <p><%= categoriesString %></p>
+                    <% } %>
+                    <p><strong><%= book.price %></strong> $</p>
+                </div>
+            </div>
+            <div class="bookDescription">
+                <h2>Book Description</h2>
+                <div class="sepLine"></div>
+                <p><%= book.description %></p>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    
+</body>
+
+</html>
