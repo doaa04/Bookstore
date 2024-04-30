@@ -37,7 +37,9 @@ userRouter.get('/search', (req,res) => {
     const searchResults = Book.find({
         $or: [
             { title: { $regex: query, $options: 'i' } }, 
-            { author: { $regex: query, $options: 'i' } } 
+            { author: { $regex: query, $options: 'i' } }, 
+            { series: { $regex: query, $options: 'i' } }, 
+            { categories: { $regex: query, $options: 'i' } }
         ]
     })
     .exec()
