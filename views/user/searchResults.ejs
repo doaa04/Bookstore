@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Search Results </title>
+    <link rel="stylesheet" href="/styles/user/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <div class="books">
+            <% if (searchResults.length > 0) { %>
+                <% searchResults.forEach(book => { %>
+                    <%- include('../partials/bookDisplay', { book: book }) %>
+                <% }) %>
+            <% } else { %>
+                <h2>No such book or author.</h2>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>

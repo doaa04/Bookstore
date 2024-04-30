@@ -1,4 +1,5 @@
 const express = require('express');
+const Book = require('../models/book');
 
 // creation of a userRouter instance
 const userRouter = express.Router();
@@ -9,7 +10,6 @@ userRouter.get('/', (req, res) => {
     res.redirect('/user/home');
 })
 
-const Book = require('../models/book');
 userRouter.get('/user/home', (req, res) => {
     Book.find()
     .then((result) => {
@@ -29,6 +29,22 @@ userRouter.get('/user/book/:id', (req, res) => {
     .catch(err => {
         console.log(err);
     })
+})
+
+// search results
+userRouter.get('/search', (req,res) => {
+    const query = req.query.searchBar;
+    const searchResults = Book.find({
+        $or: [
+            { title: { $regex: query, $options: 'i' } }, 
+            { author: { $regex: query, $options: 'i' } } 
+        ]
+    })
+    .exec()
+    .then(searchResults => {
+        res.render('user/searchResults', { searchResults: searchResults }); 
+    })
+    .catch(err => console.log(err));
 })
 
 // exporting the router

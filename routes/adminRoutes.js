@@ -108,5 +108,21 @@ adminRouter.delete('/admin/home/:id', (req, res) => {
         });
 });
 
+// search results
+adminRouter.get('/search', (req,res) => {
+    const query = req.query.searchBar;
+    const searchResults = Book.find({
+        $or: [
+            { title: { $regex: query, $options: 'i' } }, 
+            { author: { $regex: query, $options: 'i' } } 
+        ]
+    })
+    .exec()
+    .then(searchResults => {
+        res.render('admin/searchResults', { searchResults: searchResults }); 
+    })
+    .catch(err => console.log(err));
+})
+
 // exporting the router
 module.exports = adminRouter; 
