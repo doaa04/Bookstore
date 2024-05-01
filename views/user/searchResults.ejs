@@ -17,7 +17,7 @@
         <div class="books">
             <% if (searchResults.length > 0) { %>
                 <% searchResults.forEach(book => { %>
-                    <%- include('../partials/bookDisplay', { book: book }) %>
+                    <%- include('../partials/bookDisplay', { book: book, userType: 'user' }) %>
                 <% }) %>
             <% } else { %>
                 <h2>No such book or author.</h2>

@@ -109,7 +109,7 @@ adminRouter.delete('/admin/home/:id', (req, res) => {
 });
 
 // search results
-adminRouter.get('/search', (req,res) => {
+adminRouter.get('/admin/search', (req,res) => {
     const query = req.query.searchBar;
     const searchResults = Book.find({
         $or: [

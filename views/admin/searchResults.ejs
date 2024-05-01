@@ -9,7 +9,7 @@
 </head>
 <body>
     
-    <%- include('../partials/navbar') %>
+    <%- include('../partials/adminNavbar') %>
 
     <%- include('../partials/adminSidebar') %>
 
@@ -17,7 +17,7 @@
         <div class="books">
             <% if (searchResults.length > 0) { %>
                 <% searchResults.forEach(book => { %>
-                    <%- include('../partials/bookDisplay', { book: book }) %>
+                    <%- include('../partials/bookDisplay', { book: book, userType: 'admin' }) %>
                 <% }) %>
             <% } else { %>
                 <h2>No such book or author.</h2>

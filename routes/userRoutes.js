@@ -32,7 +32,7 @@ userRouter.get('/user/book/:id', (req, res) => {
 })
 
 // search results
-userRouter.get('/search', (req,res) => {
+userRouter.get('/user/search', (req,res) => {
     const query = req.query.searchBar;
     const searchResults = Book.find({
         $or: [
