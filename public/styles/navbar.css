@@ -55,40 +55,71 @@ nav {
 }
 
 .navbar {
-    margin-right: 70px;
-    border-radius: 5px;
-    margin: 13px;
+    margin-right: 20px;
 }
 
-.navbar li {
-    background-color: rgb(255, 255, 255);
-    padding: 10px;
+.navButton {
+    list-style: none;
+    background-color: rgb(231, 228, 228);
     border-radius: 10px;
+}
+
+.navButton {
+    position: relative;
+    float: left;
+    background-color: white;
+    border-radius: 10px;
+    margin: 5px;
     box-shadow: -3px 5px 0.1px -1px rgba(0, 0, 0, 0.1);
 }
 
-.navbar li:hover {
-    a {
-        color: white;
-    }
-
-    background-color: rgba(0, 0, 0, 1);
+.navButton a:hover {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
 }
 
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 10px;
-}
-
-nav ul li a {
-    color: #000000;
+.navButton a {
+    padding: 10px;
     text-decoration: none;
+    display: block;
+    color: black;
+}
+
+.navbar ul li ul {
+    margin-top: 15px;
+    position: absolute;
+    width: 120%;
+    left: -15%;
+    display: none;
+    background-color: rgba(255, 210, 0, 1);
+    padding: 5px;
+}
+
+.navbar ul li ul li {
+    width: 100%;
+}
+
+.navbar ul li ul li a {
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li ul li a:hover {
+    background-color: rgb(255, 255, 255);
+    color: black;
+    border-radius: 0;
+}
+
+.navbar ul li ul li a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+}
+
+.navbar ul li:focus-within > ul,
+.navbar ul li:hover > ul {
+    display: initial;
 }
 
 .searchBar {
@@ -99,6 +130,7 @@ nav ul li a {
     border-radius: 10px;
     padding-left: 10px;
     border: white solid 1px;
+    margin: 10px;
 }
 
 .searchBar div {

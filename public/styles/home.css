@@ -8,10 +8,10 @@
     width: 350px;
 }
 .bookCover img {
-    height: 170px;
+    height: 140px;
     width: 110px;
     border-radius: 10px;
-    margin: 5px;
+    margin: 10px;
 }
 .bookInfo {
     margin: 10px;

@@ -4,15 +4,16 @@
     </div>
     <div class="bookInfo">
         <a href="/<%= userType %>/book/<%= book._id %>">
-            <h4><%= book.title %></h4>
+            <p class="titleEdition">
+                <%= book.title %>
+                <% if (book.edition) { %>
+                    , <%= book.edition %>
+                <% } %>
+            </p>
         </a>
-        <p>By <%= book.author %></p>
+        <p>By <%= book.author %>, <%= book.year %></p>
         <p>Language: <%= book.language %></p>
         <p><%= book.pages %> pages</p>
-        <p>Year: <%= book.year %></p>
-        <% if (book.edition) { %>
-            <p><%= book.edition %></p>
-        <% } %>
         <% if (book.series) { %>
             <p><strong>Part of series: </strong><%= book.series %></p>
         <% } %>
@@ -31,5 +32,11 @@
 <style>
     .unavailableMark {
         color: red;
+    }
+    .titleEdition {
+        font-size: 15px;
+        color: rgb(128, 125, 120);
+        text-decoration: none;
+        font-weight: bold;
     }
 </style>

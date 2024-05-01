@@ -12,12 +12,27 @@
             <button type="submit">Search</i></button>
         </form>
     </div>
-    <ul class="navbar">
-        <li><a href="#">All Categories ▾</a></li>
-        <li><a href="#">Services ▾</a></li>
-        <li><a href="#">Stores ▾</a></li>
-        <li><a href="#">Social Media ▾</a></li>
-    </ul>
+    <div class="navbar">
+        <ul>
+            <li class="navButton"><a href="#">Categories ▾</a>
+                <ul>
+                    <% const categories = ['Fiction', 'Non-Fiction', 'Mystery', 'Fantasy', 'Science Fiction', 'Romance', 'Drama', 'History','Programming','Mathematics', 'Physics','Music','Art','Cooking']  %>
+                    <% categories.forEach(category => { %>
+                        <li><a href="#"><%= category %></a></li>
+                    <% }) %>
+                </ul>
+            </li>
+            <li class="navButton"><a href="#">Services</a></li>
+            <li class="navButton"><a href="#">Stores</a></li>
+            <li class="navButton"><a href="#">Social Media ▾</a>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Telegram</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </nav>
 
 <link rel="stylesheet" type="text/css" href="/styles/navbar.css">
