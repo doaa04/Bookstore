@@ -23,7 +23,13 @@
         <% } %>
         <p><strong><%= book.price %></strong> $</p>
         <% if (book.availableCopies == 0) { %>
-            <p>Unavailable</p>
+            <p class="unavailableMark">Unavailable</p>
         <% } %>
     </div>
 </div>
+
+<style>
+    .unavailableMark {
+        color: red;
+    }
+</style>
