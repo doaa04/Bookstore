@@ -30,7 +30,7 @@
                 <% if (books.length > 0) { %>
                     <% books.forEach(book => { %>
                         <% if (book.availableCopies == 0) { %>
-                            <%- include('../partials/bookDisplay', { book: book }) %>
+                            <%- include('../partials/bookDisplay', { book: book, userType: 'admin' }) %>
                         <% } %>
                     <% }) %>
                 <% } %>
@@ -40,7 +40,7 @@
         <div class="books">
             <% if (books.length > 0) { %>
                 <% books.forEach(book => { %>
-                    <%- include('../partials/bookDisplay', { book: book }) %>
+                    <%- include('../partials/bookDisplay', { book: book, userType: 'admin' }) %>
                 <% }) %>
             <% } %>
         </div>

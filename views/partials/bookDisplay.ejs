@@ -3,7 +3,7 @@
         <img src="/covers/<%= book.imageUrl %>">
     </div>
     <div class="bookInfo">
-        <a href="/admin/book/<%= book._id %>">
+        <a href="/<%= userType %>/book/<%= book._id %>">
             <h4><%= book.title %></h4>
         </a>
         <p>By <%= book.author %></p>
