@@ -1,0 +1,36 @@
+<script>
+    // showing categories 
+    selectCategoryButton = document.querySelector(".selectCategoryButton");
+    selectCategoryButton.addEventListener("click", () => {
+        selectCategoryButton.classList.toggle("open");
+    })
+    
+    // collecting selected categories 
+    let selectedCategoriesList = [];
+    categories = document.querySelectorAll(".categories li");
+    categories.forEach(category => {
+        category.addEventListener("click", () => {
+            category.classList.toggle("checked");
+            const categoryName = category.querySelector(".categoryName").innerText.trim();
+            if (category.classList.contains("checked")) {
+                selectedCategoriesList.push(categoryName);
+            }
+            else {
+                const index = selectedCategoriesList.indexOf(categoryName);
+                if (index !== -1) {
+                    selectedCategoriesList.splice(index, 1);
+                }
+        }
+        })
+    })
+
+        // send form data + selected categories list to server 
+        const selectedCategoriesInput = document.getElementById('selectedCategories');
+        const form = document.querySelector('.addBookForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            selectedCategoriesInput.value = JSON.stringify(selectedCategoriesList);
+            form.submit();
+        });
+</script>
+    

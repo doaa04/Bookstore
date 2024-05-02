@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 // creation of a userRouter instance
 const adminRouter = express.Router();
@@ -107,6 +108,51 @@ adminRouter.delete('/admin/home/:id', (req, res) => {
             res.status(500).send('Error deleting book');
         });
 });
+
+adminRouter.get('/admin/updateBook/:id', (req, res) => {
+    const id = req.params.id;
+    Book.findById(id)
+        .then(result => {
+            res.render('admin/updateBook', { book: result, categories: categories })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).send('Error updating book');
+        });
+})
+
+adminRouter.post('/admin/updateBookData/:id', upload.single("cover"), async (req, res) => {
+    try {
+        const id = req.params.id;
+        const existingBook = await Book.findById(id);
+        const oldImageUrl = existingBook.imageUrl;
+
+        if (req.file) {
+            fs.unlinkSync(path.join(__dirname, '../public', oldImageUrl));
+        }
+
+        let imageUrl = req.file? req.file.filename : oldImageUrl;
+        const updatedBookData = {
+            title: req.body.title,
+            author: req.body.author,
+            description: req.body.description,
+            language: req.body.language,
+            pages: req.body.pages,
+            year: req.body.year,
+            edition: req.body.edition,
+            series: req.body.series,
+            categories: req.body.selectedCategories,
+            price: req.body.price,
+            availableCopies: req.body.availableCopies,
+            imageUrl: imageUrl
+        };
+        await Book.findByIdAndUpdate(id, updatedBookData)
+        res.redirect('/admin/home');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error updating book');
+    }
+})
 
 // search results
 adminRouter.get('/admin/search', (req,res) => {
