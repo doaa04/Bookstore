@@ -131,6 +131,9 @@ adminRouter.post('/admin/updateBookData/:id', upload.single("cover"), async (req
             fs.unlinkSync(path.join(__dirname, '../public', oldImageUrl));
         }
 
+        const categoriesArray = JSON.parse(req.body.selectedCategories);
+        const categories = categoriesArray.length > 0 ? req.body.selectedCategories : existingBook.categories;
+
         let imageUrl = req.file? req.file.filename : oldImageUrl;
         const updatedBookData = {
             title: req.body.title,
@@ -141,7 +144,7 @@ adminRouter.post('/admin/updateBookData/:id', upload.single("cover"), async (req
             year: req.body.year,
             edition: req.body.edition,
             series: req.body.series,
-            categories: req.body.selectedCategories,
+            categories: categories,
             price: req.body.price,
             availableCopies: req.body.availableCopies,
             imageUrl: imageUrl
