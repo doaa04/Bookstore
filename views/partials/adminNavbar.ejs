@@ -18,7 +18,7 @@
                 <ul>
                     <% const categories = ['Fiction', 'Non-Fiction', 'Mystery', 'Fantasy', 'Science Fiction', 'Romance', 'Drama', 'History','Programming','Mathematics', 'Physics','Music','Art','Cooking']  %>
                     <% categories.forEach(category => { %>
-                        <li><a href="#"><%= category %></a></li>
+                        <li><a href="/admin/search?category=<%= category %>"><%= category %></a></li>
                     <% }) %>
                 </ul>
             </li>

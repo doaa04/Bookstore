@@ -33,20 +33,39 @@ userRouter.get('/user/book/:id', (req, res) => {
 
 // search results
 userRouter.get('/user/search', (req,res) => {
-    const query = req.query.searchBar;
-    const searchResults = Book.find({
-        $or: [
-            { title: { $regex: query, $options: 'i' } }, 
-            { author: { $regex: query, $options: 'i' } }, 
-            { series: { $regex: query, $options: 'i' } }, 
-            { categories: { $regex: query, $options: 'i' } }
-        ]
-    })
-    .exec()
-    .then(searchResults => {
-        res.render('user/searchResults', { searchResults: searchResults }); 
-    })
-    .catch(err => console.log(err));
+    try {
+
+        const query = req.query.searchBar;
+        var searchResults;
+        
+        if (req.query.category) {
+            searchResults = Book.find({
+                 categories: { $regex: req.query.category, $options: 'i' }
+            })
+            .exec()
+            .then(searchResults => {
+                res.render('admin/searchResults', { searchResults: searchResults });
+            });
+        }
+
+        else {
+            searchResults = Book.find({
+                $or: [
+                    { title: { $regex: query, $options: 'i' } },
+                    { author: { $regex: query, $options: 'i' } },
+                    { series: { $regex: query, $options: 'i' } },
+                    { categories: { $regex: query, $options: 'i' } }
+                ]
+            })
+            .exec()
+            .then(searchResults => {
+                res.render('admin/searchResults', { searchResults: searchResults });
+            });
+        }
+    
+    } catch (err) {
+        console.log(err);
+    }
 })
 
 // exporting the router
