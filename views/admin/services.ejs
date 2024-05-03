@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Services</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/adminNavbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <div class="options">
+            <a href="/admin/addService">Add New Service</a>
+        </div>
+        <div class="services">
+            <% if (services.length>0) { %>
+                <% services.forEach(service => { %>
+                    <div class="service">
+                        <div class="serviceInfo">
+                            <h3><%= service.title %></h3>
+                            <p style="white-space: pre-line;"><%= service.description %></p>
+                            <div class="options">
+                                <a href="#" class="deleteService">Delete Service</a>
+                                <a href="/admin/updateService/<%= service._id %>" class="updateService" data-doc="<%= service._id %>">Update Service</a>
+                            </div>
+                        </div>
+                        <% if (service.imageUrl) { %>
+                            <div class="serviceImage">
+                                <img src="<%= service.imageUrl %>">
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
+
+<style>
+    .options {
+        margin-top: 20px;
+    }
+    .options a {
+        background-color: rgba(255, 210, 0, 1);
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+    .options a:hover {
+        background-color: rgb(0, 0, 0);
+        color: white;
+    }
+
+    .service {
+        margin-bottom: 1px;
+        background-color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .service div {
+        margin: 20px;
+        width: 50%;
+        text-align: center;
+    }
+    .serviceImage img {
+        width: 350px;
+    }
+</style>

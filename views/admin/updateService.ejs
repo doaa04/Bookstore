@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Service Update</title>
+    <link rel="stylesheet" href="/styles/admin/addBook.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/adminNavbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <h1>Update Service</h1>
+        <form class="addBookForm" action="/admin/updateServiceData/<%= service._id %>" method="POST" enctype="multipart/form-data">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="<%= service.title %>"><br>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required><%= service.description %></textarea><br>
+
+            <label for="serviceImage">Image:</label>
+            <input type="file" id="serviceImage" name="serviceImage" accept="image/*"><br>
+            
+            <button type="submit">Update Service</button>
+        </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>

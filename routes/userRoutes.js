@@ -1,5 +1,6 @@
 const express = require('express');
 const Book = require('../models/book');
+const Service = require('../models/service');
 
 // creation of a userRouter instance
 const userRouter = express.Router();
@@ -28,6 +29,13 @@ userRouter.get('/user/book/:id', (req, res) => {
     })
     .catch(err => {
         console.log(err);
+    })
+})
+
+userRouter.get('/user/services', (req, res) => {
+    Service.find()
+    .then(result => {
+        res.render('user/services', { services: result });
     })
 })
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Services</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <div class="services">
+            <% if (services.length>0) { %>
+                <% services.forEach(service => { %>
+                    <div class="service">
+                        <div class="serviceInfo">
+                            <h3><%= service.title %></h3>
+                            <p style="white-space: pre-line;"><%= service.description %></p>
+                        </div>
+                        <% if (service.imageUrl) { %>
+                            <div class="serviceImage">
+                                <img src="<%= service.imageUrl %>">
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
+
+<style>
+    .service {
+        margin-bottom: 1px;
+        background-color: white;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .service div {
+        margin: 20px;
+        width: 50%;
+        text-align: center;
+    }
+    .serviceImage img {
+        width: 350px;
+    }
+</style>
