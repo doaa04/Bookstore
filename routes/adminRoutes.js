@@ -100,7 +100,9 @@ adminRouter.post('/admin/addBook', upload.single("cover"), (req, res) => {
 adminRouter.delete('/admin/home/:id', (req, res) => {
     const id = req.params.id;
     Book.findByIdAndDelete(id)
-        .then(() => {
+        .then(book => {
+            const oldImageUrl = book.imageUrl;
+            fs.unlinkSync(path.join(__dirname, `../public/covers/${oldImageUrl}`));
             res.sendStatus(204); 
         })
         .catch(err => {
