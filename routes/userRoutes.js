@@ -44,7 +44,7 @@ userRouter.get('/user/search', (req,res) => {
             })
             .exec()
             .then(searchResults => {
-                res.render('admin/searchResults', { searchResults: searchResults });
+                res.render('user/searchResults', { searchResults: searchResults });
             });
         }
 
@@ -59,7 +59,7 @@ userRouter.get('/user/search', (req,res) => {
             })
             .exec()
             .then(searchResults => {
-                res.render('admin/searchResults', { searchResults: searchResults });
+                res.render('user/searchResults', { searchResults: searchResults });
             });
         }
     

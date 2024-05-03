@@ -105,6 +105,11 @@ nav {
     margin: 0;
 }
 
+.navbar ul li ul li a i {
+    font-size: 20px;
+    margin-left: 6px;
+}
+
 .navbar ul li ul li a:hover {
     background-color: rgb(255, 255, 255);
     color: black;
