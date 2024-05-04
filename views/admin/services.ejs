@@ -25,7 +25,7 @@
                             <h3><%= service.title %></h3>
                             <p style="white-space: pre-line;"><%= service.description %></p>
                             <div class="options">
-                                <a href="#" class="deleteService">Delete Service</a>
+                                <a href="/admin/deleteService/<%= service._id %>" class="deleteService" data-doc="<%= service._id %>">Delete Service</a>
                                 <a href="/admin/updateService/<%= service._id %>" class="updateService" data-doc="<%= service._id %>">Update Service</a>
                             </div>
                         </div>

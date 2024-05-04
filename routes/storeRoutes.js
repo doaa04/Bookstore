@@ -51,4 +51,12 @@ storeRouter.post('/admin/updateStore/:id', async (req, res) => {
     res.redirect('/admin/stores');
 })
 
+storeRouter.get('/admin/deleteStore/:id', async (req, res) => {
+    const id = req.params.id;
+    Store.findByIdAndDelete(id)
+    .then(() => {
+        res.redirect('/admin/stores');
+    })
+})
+
 module.exports = storeRouter;

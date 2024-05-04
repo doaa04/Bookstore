@@ -79,4 +79,16 @@ serviceRouter.post('/admin/addService', serviceUpload.single("serviceImage"), (r
         });
 })
 
+serviceRouter.get('/admin/deleteService/:id', async (req, res) => {
+    const id = req.params.id;
+    const service = await Service.findById(id);
+    const oldImageUrl = service.imageUrl;
+    fs.unlinkSync(path.join(__dirname, `../public/${oldImageUrl}`));
+
+    Service.findByIdAndDelete(id)
+    .then(() => {
+        res.redirect('/admin/services');
+    })
+})
+
 module.exports = serviceRouter; 
