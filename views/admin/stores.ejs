@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Services</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/adminNavbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <div class="options">
+            <a href="/admin/addStore">Add New Store</a>
+        </div>
+        <div class="stores">
+            <% if (stores.length>0) { %>
+                <% stores.forEach(store => { %>
+                    <div class="store">
+                        <div class="storeInfo">
+                            <h2><%= store.name %></h2>
+                            <h4>
+                                <i class="fa-solid fa-phone" style="color: #000000;"></i>
+                                +212 <%= store.phoneNumber %>
+                            </h4>
+                            <p style="white-space: pre-line;"><%= store.opening %></p>
+                            <div class="optionsButtons">
+                                <a href="/admin/updateStore/<%= store._id %>" class="updateStore" data-doc="<%= store._id %>">Update Store</a>
+                                <a href="/admin/deleteStore" class="deleteStore">Delete Store</a>
+                            </div>
+                        </div>
+                        <div class="storeLocation">
+                            <iframe src="<%= store.location %>"></iframe>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
+
+<style>
+    .options, .optionsButtons {
+        margin-top: 20px;
+    }
+    .options a, .optionsButtons a {
+        background-color: rgba(255, 210, 0, 1);
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+    .optionsButtons a {
+        margin: 5px;
+    }
+    .options a:hover {
+        background-color: rgb(0, 0, 0);
+        color: white;
+    }
+    .optionsButtons {
+        display: flex;
+        flex-direction: column;
+    }
+    .optionsButtons a:hover {
+        background-color: rgb(0, 0, 0);
+        color: white;
+    }
+    .stores {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    .store {
+        margin-top: 20px;
+        margin-right: 60px;
+        display: flex;
+        justify-content: space-between;
+        min-width: 475px;
+    }
+    .storeInfo h2, .storeInfo h4, .storeInfo p {
+        margin-top: 10px;
+    }
+
+    .storeLocation {
+        height: 100%;
+    }
+    iframe {
+    height: 100%;
+    border: 1px solid #ccc; 
+    border-radius: 10px;
+}
+</style>

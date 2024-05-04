@@ -5,7 +5,6 @@ const fs = require('fs');
 const Book = require('../models/book');
 
 
-// creation of a userRouter instance
 const adminRouter = express.Router();
 
 // middleware to parse from data
@@ -31,6 +30,9 @@ adminRouter.use(bookRoutes);
 
 const serviceRoutes = require('./serviceRoutes');
 adminRouter.use(serviceRoutes);
+
+const storeRouter = require('./storeRoutes');
+adminRouter.use(storeRouter);
 
 // search results
 adminRouter.get('/admin/search', (req,res) => {
