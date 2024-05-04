@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Services</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <div class="stores">
+            <% if (stores.length>0) { %>
+                <% stores.forEach(store => { %>
+                    <div class="store">
+                        <div class="storeInfo">
+                            <h2><%= store.name %></h2>
+                            <h4>
+                                <i class="fa-solid fa-phone" style="color: #000000;"></i>
+                                +212 <%= store.phoneNumber %>
+                            </h4>
+                            <p style="white-space: pre-line;"><%= store.opening %></p>
+                        </div>
+                        <div class="storeLocation">
+                            <iframe src="<%= store.location %>"></iframe>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
+
+<style>
+    .stores {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    .store {
+        margin-top: 20px;
+        margin-right: 60px;
+        display: flex;
+        justify-content: space-between;
+        min-width: 475px;
+    }
+    .storeInfo h2, .storeInfo h4, .storeInfo p {
+        margin-top: 10px;
+    }
+
+    .storeLocation {
+        height: 100%;
+    }
+    iframe {
+    height: 100%;
+    border: 1px solid #ccc; 
+    border-radius: 10px;
+}
+</style>

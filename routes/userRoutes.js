@@ -1,6 +1,7 @@
 const express = require('express');
 const Book = require('../models/book');
 const Service = require('../models/service');
+const Store = require('../models/store');
 
 // creation of a userRouter instance
 const userRouter = express.Router();
@@ -74,6 +75,13 @@ userRouter.get('/user/search', (req,res) => {
     } catch (err) {
         console.log(err);
     }
+})
+
+userRouter.get('/user/stores', (req, res) => {
+    Store.find()
+    .then(result => {
+        res.render('user/stores', { stores: result });
+    })
 })
 
 // exporting the router
