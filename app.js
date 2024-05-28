@@ -1,4 +1,10 @@
 const express = require('express');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const dotenv = require('dotenv');
+const bcrypt = require("bcrypt");
+
+dotenv.config();
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -13,6 +19,16 @@ mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
 .then((result) => app.listen(3000))
 .catch((err) => console.log(err));
 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ 
+        mongoUrl: uri 
+    }),
+    cookie: { secure: false } 
+}));
+
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
 
@@ -24,3 +40,13 @@ app.use((req, res) => {
 });
 
 
+const plainPassword = 'aaa123'; 
+const saltRounds = 10;
+
+bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
+  if (err) {
+    console.error('Error generating hash:', err);
+  } else {
+    console.log('Hashed password:', hash);
+  }
+});

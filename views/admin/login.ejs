@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Login</title>
+    <link rel="stylesheet" href="/styles/addForm.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/adminNavbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <h1>Login</h1>
+        <form class="addBookForm" action="/admin/login" method="POST">
+            <div class="email-container">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="password-container">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" style="color: #ffffff;"></i></span> 
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+<style>
+    .signup {
+        margin-top: 20px;
+    }
+    .signup a {
+        color: goldenrod;
+    }
+    .toggle-password {
+    position: relative;
+    color: black;
+    background-color: rgb(203, 199, 199);
+    border-radius: 30px;
+    padding: 5px;
+    display: inline-block;
+    top: -47px;
+    background-image: url('/images/eye.png'); 
+    background-size: cover;
+    float: right;
+    right: 5px;
+    cursor: pointer;
+    }
+</style>
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+</script>
+</html>

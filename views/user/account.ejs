@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Account</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <h1><strong>My account</strong></h1>
+        <div class="account-info">
+            <p><strong>Username: </strong><%= user.username %></p>
+            <p><strong>Email: </strong><%= user.email %></p>
+            <p><strong>CIN: </strong><%= user.cin %></p>
+            <p><strong>Address: </strong><%= user.address %></p>
+            <p><strong>Birthday: </strong><%= user.birthday.getDate() %>/<%= user.birthday.getMonth()+1 %>/<%= user.birthday.getYear() %></p>
+            <p><strong>Phone number: </strong><%= user.phoneNumber %></p>
+        </div>
+        <div class="options">
+            <a href="#" class="editProfile">Edit Profile</a>
+        </div>
+        <div class="account-info">
+            <% if (user.history.length === 0) { %>
+                <h3>You currently don't own any books, but you may find one you like here. Check out our best sellers!</h3>
+                <a href="/user/home">Find something interesting here.</a>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+<style>
+    .content h1 {
+        margin: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .account-info {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        margin: 20px;
+    }
+
+    .account-info p {
+        margin: 10px 0;
+    }
+
+    .account-info p strong {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    .account-info a {
+        color: goldenrod;
+    }
+    .options {
+        margin: 20px;
+    }
+    .options a {
+        background-color: rgba(255, 210, 0, 1);
+        color: black;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+    }
+    .options a:hover {
+        background-color: rgb(0, 0, 0);
+        color: white;
+    }
+</style>
+</html>
