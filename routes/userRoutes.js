@@ -234,7 +234,10 @@ userRouter.get("/user/basket", isAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.session.user);
         if (user) {
-            res.render('user/basket', { user: user });
+            const basketBooks = await Book.find({
+                _id: { $in: user.basket }
+            }).exec();
+            res.render('user/basket', { basket: basketBooks });
         } else {
             res.redirect('/user/login');
         }
@@ -292,7 +295,36 @@ userRouter.post('/user/removeFromFavorites', async (req, res) => {
     }
 });
 
+userRouter.post('/user/addToBasket', async (req, res) => {
+    try {
+        const userId = req.session.user._id; 
+        const { bookId } = req.body;
 
+        if (!userId) {
+            console.log("User not authenticated");
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            console.log("User not found");
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        if (user.basket.includes(bookId)) {
+            console.log("Book already in basket");
+            return res.status(400).json({ success: false, message: 'Book already in basket' });
+        }
+
+        user.basket.push(bookId);
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'Book added to basket' });
+    } catch (error) {
+        console.error('Error adding book to basket:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
 
 // exporting the router
 module.exports = userRouter; 

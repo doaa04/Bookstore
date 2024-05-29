@@ -15,10 +15,94 @@
 
     <div class="content">
         <h1>Basket</h1>
+        <div class="basket">
+            <% if (basket.length > 0) { %>
+                <% basket.forEach(book => { %>
+                    <div class="product">
+                        <div class="cover">
+                            <img class="bookCover" src="/covers/<%= book.imageUrl %>" alt="Book Cover">
+                        </div>
+                        <div class="bookDetails">
+                            <p><strong>Title: </strong><%= book.title %></p>
+                            <p><strong>Author: </strong><%= book.author %></p>
+                        </div>
+                        <div class="unitPrice">
+                            <p><strong>Unit Price: </strong><%= book.price %></p>
+                        </div>
+                        <div class="unitPrice">
+                            <p><strong>Copies Price: </strong><%= book.price %></p>
+                        </div>
+                        <div class="quantityControls">
+                            <button class="decrease" id="decrease">-</button>
+                            <input type="number" class="quantity" value="1" min="1">
+                            <button class="increase" id="increase">+</button>
+                        </div>
+                    </div>
+                <% }); %>
+                <div class="totalPrice">
+                    <h3>Total: $<span id="totalPrice">0.00</span></h3>
+                </div>
+            <% } else { %>
+                <p>Your basket is empty.</p>
+            <% } %>
+        </div>
     </div>
 
     <%- include('../partials/footer') %>
     
 </body>
-
+<style>
+    .basket {
+        display: block;
+        margin-top: 20px;
+    }
+    .product {
+        display: flex;
+        border-bottom: 1px rgb(192, 192, 192) solid;
+    }
+    .product div {
+        padding: 10px;
+    }
+    .cover img {
+        height: 150px;
+        border-radius: 10px;
+    }
+    .bookDetails {
+        width: 300px;
+    }
+    .unitPrice {
+        width: 200px;
+    }
+    .quantityControls {
+        width: 200px;
+    }
+    .quantityControls button {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        border: none;
+    }
+    .quantityControls button:hover {
+        background-color: goldenrod;
+        cursor: pointer;
+    }
+    .quantityControls input {
+        width: 50px;
+        margin: 0 10px;
+    }
+    .totalPrice {
+        margin-top: 20px;
+    }
+</style>
+<script>
+    let count = 0;
+    document.getElementsByClassName("increase").onclick = function() {
+        count += 1;
+        document.getElementById("totalPrice").innerHTML = count;
+    }
+    document.getElementsByClassName("decrease").onclick = function() {
+        count -= 1;
+        document.getElementById("totalPrice").innerHTML = count;
+    }
+</script>
 </html>
