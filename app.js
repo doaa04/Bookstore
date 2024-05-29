@@ -9,6 +9,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(express.json());
 
 const mongodb = require('mongodb'); 
 const mongoose = require('mongoose');
@@ -31,6 +32,7 @@ app.use(session({
 
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
+app.use('/user/addToFavorites', userRoutes);
 
 const adminRoutes = require('./routes/adminRoutes');
 app.use(adminRoutes);
@@ -40,13 +42,13 @@ app.use((req, res) => {
 });
 
 
-const plainPassword = 'aaa123'; 
-const saltRounds = 10;
+// const plainPassword = 'aaa123'; 
+// const saltRounds = 10;
 
-bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
-  if (err) {
-    console.error('Error generating hash:', err);
-  } else {
-    console.log('Hashed password:', hash);
-  }
-});
+// bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
+//   if (err) {
+//     console.error('Error generating hash:', err);
+//   } else {
+//     console.log('Hashed password:', hash);
+//   }
+// });

@@ -5,6 +5,7 @@ const Store = require('../models/store');
 const User = require('../models/user');
 const session = require('express-session');
 const bcrypt = require("bcrypt")
+const mongoose = require('mongoose');
 
 const userRouter = express.Router();
 
@@ -195,6 +196,103 @@ userRouter.get('/user/logout', (req, res) => {
         }
     });
 });
+
+// needs authentication
+
+userRouter.get("/user/favorites", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            const favoriteBooks = await Book.find({
+                _id: { $in: user.favorites }
+            }).exec();
+            res.render('user/favorites', { favorites: favoriteBooks });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+userRouter.get("/user/history", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/history', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+userRouter.get("/user/basket", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/basket', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+userRouter.post('/user/addToFavorites', async (req, res) => {
+    try {
+        const userId = req.session.user._id; 
+        const { bookId } = req.body;
+
+        if (!userId) {
+            console.log("User not authenticated");
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            console.log("User not found");
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        if (user.favorites.includes(bookId)) {
+            console.log("Book already in favorites");
+            return res.status(400).json({ success: false, message: 'Book already in favorites' });
+        }
+
+        user.favorites.push(bookId);
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'Book added to favorites' });
+    } catch (error) {
+        console.error('Error adding book to favorites:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
+
+userRouter.post('/user/removeFromFavorites', async (req, res) => {
+    const { bookId } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(req.session.user._id, { $pull: { favorites: bookId } }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Book removed from favorites' });
+    } catch (error) {
+        console.error('Error removing book from favorites:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+
 
 // exporting the router
 module.exports = userRouter; 

@@ -1,10 +1,6 @@
 <div class="book">
     <div class="bookCover">
         <img src="/covers/<%= book.imageUrl %>">
-        <div class="options">
-            <a href="#"><i class="fa-solid fa-heart" style="color: #FFD43B;" title="Add to favorites" onclick="addToFavorites('<%= book._id %>')"></i></a>
-            <a href="#"><i class="fa-solid fa-circle-plus" style="color: #FFD43B;" title="Add to cart"></i></a>
-        </div>
     </div>
     <div class="bookInfo">
         <a href="/<%= userType %>/book/<%= book._id %>">
@@ -32,6 +28,7 @@
         <% } %>
     </div>
 </div>
+
 <style>
     .unavailableMark {
         color: red;
@@ -46,36 +43,4 @@
     .titleEdition:hover {
         color: black;
     }
-    .options {
-        margin-left: 10px;
-        transition: color 0.3s ease, transform 0.3s ease;
-    }
-    .options i:hover {
-        color: #202020; 
-        transform: scale(1.2); 
-    }
 </style>
-<script>
-    function addToFavorites(bookId) {
-        fetch('/user/addToFavorites', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ bookId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Book added to favorites!');
-            } else {
-                console.error('Failed to add book to favorites:', data.message);
-                alert('Failed to add book to favorites: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-    }
-</script>
