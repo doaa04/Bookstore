@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Sign Up</title>
+    <link rel="stylesheet" href="/styles/addForm.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <h1>One of us ?</h1>
+        <a href="/user/login">Sign in</a>
+        <h1>Sign Up</h1>
+        <form class="addBookForm" action="/user/signup" method="POST">
+            <div class="username-container">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="email-container">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="password-container">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" style="color: #ffffff;"></i></span> 
+            </div>
+            <div class="cin-container">
+                <label for="cin">CIN:</label>
+                <input type="text" id="cin" name="cin" required>
+            </div>
+            <div class="phoneNumber-container">
+                <label for="phoneNumber">Phone number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="address-container">
+                <label for="address">Country:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="birthday-container">
+                <label for="birthday">Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+<style>
+    .content h1 {
+        margin-top: 20px;
+    }
+    .content a {
+        color: goldenrod;
+    }
+    .toggle-password {
+    position: relative;
+    color: black;
+    background-color: rgb(203, 199, 199);
+    border-radius: 30px;
+    padding: 5px;
+    display: inline-block;
+    top: -47px;
+    background-image: url('/images/eye.png'); 
+    background-size: cover;
+    float: right;
+    right: 5px;
+    cursor: pointer;
+    }
+</style>
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById("password");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+        } else {
+            passwordInput.type = "password";
+        }
+    }
+</script>
+</html>

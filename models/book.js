@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { type } = require('os');
 const internal = require('stream');
-const schema = mongoose.Schema; // Schema is a constructor function
+const schema = mongoose.Schema; 
 
 // schema creation
 const bookSchema = new schema({
@@ -52,7 +52,11 @@ const bookSchema = new schema({
     imageUrl: {
         type: String,
         required: true
-    }
+    },
+    sales: {
+        type: Number
+    },
+    comments: [{ type: schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: true });
 
 
