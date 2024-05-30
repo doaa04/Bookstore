@@ -326,5 +326,22 @@ userRouter.post('/user/addToBasket', async (req, res) => {
     }
 });
 
+userRouter.post('/user/removeFromBasket', async (req, res) => {
+    const { bookId } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(req.session.user._id, { $pull: { basket: bookId } }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Book removed from basket' });
+    } catch (error) {
+        console.error('Error removing book from basket:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 // exporting the router
 module.exports = userRouter; 
