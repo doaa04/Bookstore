@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JupiReads | Search Results</title>
+    <title>JupiReads | Favorites</title>
     <link rel="stylesheet" href="/styles/home.css">
     <%- include('../partials/fonts') %>
 </head>
 <body>
     
-    <%- include('../partials/adminNavbar') %>
+    <%- include('../partials/navbar') %>
 
-    <%- include('../partials/adminSidebar') %>
+    <%- include('../partials/sidebar') %>
 
     <div class="content">
+        <h1>Favorites</h1>
         <div class="books">
-            <% if (searchResults.length > 0) { %>
-                <% searchResults.forEach(book => { %>
-                    <%- include('../partials/adminBookDisplay', { book: book, userType: 'admin' }) %>
-                <% }) %>
+            <% if (favorites.length > 0) { %>
+                <% favorites.forEach(book => { %>
+                    <%- include('../partials/favoriteDisplay', { book: book, userType: 'user' }) %>
+                <% }); %>
             <% } else { %>
-                <h2>No such book or author.</h2>
+                <p>You have no favorite books.</p>
             <% } %>
         </div>
     </div>
 
-
     <%- include('../partials/footer') %>
-
+    
 </body>
+
 </html>

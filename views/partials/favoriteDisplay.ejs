@@ -2,8 +2,8 @@
     <div class="bookCover">
         <img src="/covers/<%= book.imageUrl %>">
         <div class="options">
-            <a href="#"><i class="fa-solid fa-heart" style="color: #FFD43B;" title="Add to favorites" onclick="addToFavorites('<%= book._id %>')"></i></a>
-            <a href="#"><i class="fa-solid fa-circle-plus" style="color: #FFD43B;" title="Add to cart" onclick="addToBasket('<%= book._id %>')"></i></a>
+            <a href="#"><i class="fa-solid fa-heart" style="color: #252424;" title="remove from favorites" onclick="removeFromFavorites('<%= book._id %>')"></i></a>
+            <a href="#"><i class="fa-solid fa-circle-plus" style="color: #FFD43B;" title="Add to cart"></i></a>
         </div>
     </div>
     <div class="bookInfo">
@@ -56,8 +56,8 @@
     }
 </style>
 <script>
-    function addToFavorites(bookId) {
-        fetch('/user/addToFavorites', {
+    function removeFromFavorites(bookId) {
+        fetch('/user/removeFromFavorites', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -67,33 +67,11 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Book added to favorites!');
+                alert('Book removed from favorites.');
+                window.location.reload();
             } else {
-                console.error('Failed to add book to favorites:', data.message);
-                alert('Failed to add book to favorites: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-    }
-
-    function addToBasket(bookId) {
-        fetch('/user/addToBasket', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ bookId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Book added to basket!');
-            } else {
-                console.error('Failed to add book to basket:', data.message);
-                alert('Failed to add book to basket: ' + data.message);
+                console.error('Failed to remove book from favorites:', data.message);
+                alert('Failed to remove book from favorites: ' + data.message);
             }
         })
         .catch(error => {

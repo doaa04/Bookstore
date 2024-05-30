@@ -2,9 +2,14 @@ const express = require('express');
 const Book = require('../models/book');
 const Service = require('../models/service');
 const Store = require('../models/store');
+const User = require('../models/user');
+const session = require('express-session');
+const bcrypt = require("bcrypt")
+const mongoose = require('mongoose');
 
-// creation of a userRouter instance
 const userRouter = express.Router();
+
+userRouter.use(express.urlencoded({ extended: true }));
 
 // routes 
 
@@ -84,8 +89,6 @@ userRouter.get('/user/stores', (req, res) => {
     })
 })
 
-<<<<<<< Updated upstream
-=======
 // authentication
 
 async function isAuthenticated(req, res, next) {
@@ -323,23 +326,5 @@ userRouter.post('/user/addToBasket', async (req, res) => {
     }
 });
 
-userRouter.post('/user/removeFromBasket', async (req, res) => {
-    const { bookId } = req.body;
-
-    try {
-        const user = await User.findByIdAndUpdate(req.session.user._id, { $pull: { basket: bookId } }, { new: true });
-
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        return res.status(200).json({ success: true, message: 'Book removed from basket' });
-    } catch (error) {
-        console.error('Error removing book from basket:', error);
-        return res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-
->>>>>>> Stashed changes
 // exporting the router
 module.exports = userRouter; 
