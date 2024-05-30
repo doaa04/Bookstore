@@ -31,7 +31,10 @@ const userSchema = new schema({
     },
     favorites: [{ type: schema.Types.ObjectId, ref: 'Book' }],
     history: [{ type: schema.Types.ObjectId, ref: 'Book' }],
-    basket: [{ type: schema.Types.ObjectId, ref: 'Book' }],
+    basket: [{ 
+        bookId: { type: schema.Types.ObjectId, ref: 'Book' }, 
+        quantity: { type: Number, default: 1 } 
+    }],
     notifications: [{ type: schema.Types.ObjectId, ref: 'Notification' }],
     messages: [{ type: schema.Types.ObjectId, ref: 'Message' }]
 }, { timestamps: true });
