@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Contact</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="contact-form">
+        <h2 class="form-title">Report a Problem</h2> 
+        <p>If you encounter any issues, please let us know by filling out the form below.</p>
+        <form action="/user/contact" method="POST">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+            
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+</body>
+<style>
+   .contact-form {
+    max-width: 600px;
+    margin: 100px auto 50px auto; 
+    padding: 20px;
+    background: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .contact-form h2.form-title {
+        text-align: center; 
+        font-family: 'Arial', sans-serif; 
+        font-size: 24px; 
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .contact-form p {
+        text-align: center; 
+        margin-bottom: 20px;
+    }
+
+    .contact-form label {
+    display: block;
+    margin-bottom: 5px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    }
+
+    .contact-form button {
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    }
+
+</style>
+</html>

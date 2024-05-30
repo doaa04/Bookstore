@@ -8,6 +8,7 @@ const Admin = require('../models/order');
 const session = require('express-session');
 const bcrypt = require("bcrypt")
 const mongoose = require('mongoose');
+const Message = require('../models/message');
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
@@ -347,6 +348,32 @@ userRouter.post('/user/removeFromBasket', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+//gestion de formulaire message.
+userRouter.get('/user/contact', (req, res) => {
+    res.render('user/contact');
+});
+
+userRouter.post('/user/contact', async (req, res) => {
+    try {
+        const { subject, name, phoneNumber, message } = req.body;
+        
+        const newMessage = new Message({
+            subject,
+            name,
+            phoneNumber,
+            message,
+            date: new Date()
+        });
+        
+        await newMessage.save();
+        
+        res.redirect('/user/home'); 
+    } catch (error) {
+        console.error("Error during message submission:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 
 userRouter.post('/user/purchase', async (req, res) => {
     try {

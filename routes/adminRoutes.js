@@ -6,6 +6,7 @@ const Book = require('../models/book');
 const Order = require('../models/order');
 const Admin = require('../models/admin');
 const bcrypt = require("bcrypt")
+const Message = require('../models/message');
 
 const adminRouter = express.Router();
 
@@ -169,6 +170,26 @@ adminRouter.get('/admin/logout', (req, res) => {
             res.redirect('/admin/login');
         }
     });
+});
+//afficher messages de users.
+adminRouter.get('/admin/messaging', isAuthenticated, async (req, res) => {
+    try {
+        const messages = await Message.find().sort({ date: -1 });
+        res.render('admin/messaging', { messages });
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+// Route pour supprimer un message
+adminRouter.post('/admin/messages/:id/delete', isAuthenticated, async (req, res) => {
+    try {
+        await Message.findByIdAndDelete(req.params.id);
+        res.redirect('/admin/messaging'); 
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
 });
 
 // exporting the router
