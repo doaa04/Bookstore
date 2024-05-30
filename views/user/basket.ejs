@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Basket</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/navbar') %>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="content">
+        <h1>Basket</h1>
+        <div class="basket">
+            <div class="basketHeader">
+                <div class="cover">
+                    <p><strong>Book Cover</strong></p>
+                </div>
+                <div class="bookDetails">
+                    <p><strong>Book Details</strong></p>
+                </div>
+                <div class="unitPrice">
+                    <p><strong>Unit Price</strong></p>
+                </div>
+                <div class="copiesPrice">
+                    <p><strong>Total Price</strong></p>
+                </div>
+                <div class="quantity">
+                    <p><strong>Quantity</strong></p>
+                </div>
+                <div class="trash">
+                    <p><strong>Remove </strong></p>
+                </div>
+            </div>
+            <% if (basket.length > 0) { %>
+                <% basket.forEach(book => { %>
+                    <div class="product" data-price="<%= book.price %>">
+                        <div class="cover">
+                            <img class="bookCover" src="/covers/<%= book.imageUrl %>" alt="Book Cover">
+                        </div>
+                        <div class="bookDetails">
+                            <p><strong>Title: </strong><%= book.title %></p>
+                            <p><strong>Author: </strong><%= book.author %></p>
+                            <p><strong>Year: </strong><%= book.year %></p>
+                        </div>
+                        <div class="unitPrice">
+                            <p>$<span class="unit-price"><%= book.price %></span></p>
+                        </div>
+                        <div class="copiesPrice">
+                            <p>$<span class="copies-price"><%= book.price %></span></p>
+                        </div>
+                        <div class="quantityControls">
+                            <input type="number" class="quantity" value="1" min="1">
+                        </div>
+                        <div class="trash">
+                            <i class="fa-solid fa-trash" style="color: #0d0d0d;" title="remove from basket" onclick="removeFromBasket('<%= book._id %>')"></i>
+                        </div>
+                    </div>
+                <% }); %>
+                <div class="totalPrice">
+                    <h3>Total: $<span id="totalPrice">0.00</span></h3>
+                </div>
+            <% } else { %>
+                <p>Your basket is empty.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    
+</body>
+<style>
+    .basket {
+        display: block;
+        margin-top: 20px;
+    }
+    .basketHeader, 
+    .product {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 40px;
+        margin-top: 65;
+        border-bottom: 1px rgb(192, 192, 192) solid;
+    }
+    .basketHeader div, 
+    .product div {
+       padding: 10px;
+    }
+    .cover {
+        width: 150px;
+    }
+    .bookDetails {
+        width: 400px;
+    }
+    .unitPrice,
+    .copiesPrice,
+    .quantity,
+    .trash,
+    .quantityControls {
+        width: 100px;
+    }
+    .cover img {
+        width: 130px;
+        border-radius: 10px;
+    }
+    .quantityControls input {
+        width: 50px;
+        margin: 0 10px;
+        padding: 5px;
+    }
+    .trash i:hover {
+        transform: scale(1.2); 
+        cursor: pointer;
+    }
+    .totalPrice {
+        margin-top: 20px;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var quantityInputs = document.querySelectorAll('.quantity');
+        var totalPriceElement = document.getElementById('totalPrice');
+        
+        quantityInputs.forEach(function(input) {
+            input.addEventListener('change', function(event) {
+                if (input.value < 1) {
+                    input.value = 1;
+                }
+                updateCopiesPrice(input);
+                updateTotalPrice();
+            });
+        });
+    
+        function updateCopiesPrice(quantityInput) {
+            var product = quantityInput.closest('.product');
+            var unitPrice = parseFloat(product.getAttribute('data-price'));
+            var copiesPriceElement = product.querySelector('.copies-price');
+            var quantity = parseInt(quantityInput.value);
+            copiesPriceElement.innerText = (unitPrice * quantity).toFixed(2);
+        }
+        
+        function updateTotalPrice() {
+            var total = 0;
+            var copiesPrices = document.querySelectorAll('.copies-price');
+            copiesPrices.forEach(function(copiesPrice) {
+                total += parseFloat(copiesPrice.innerText);
+            });
+            totalPriceElement.innerText = total.toFixed(2);
+        }
+         
+        updateTotalPrice();
+    });
+
+    function removeFromBasket(bookId) {
+        fetch('/user/removeFromBasket', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ bookId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Book removed from basket.');
+                window.location.reload();
+            } else {
+                console.error('Failed to remove book from basket:', data.message);
+                alert('Failed to remove book from basket: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+</script>
+</html>
