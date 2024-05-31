@@ -36,6 +36,10 @@ const userSchema = new schema({
         quantity: { type: Number, default: 1 } 
     }],
     notifications: [{ type: schema.Types.ObjectId, ref: 'Notification' }],
+    searchHistory: {
+        type: [{ query: String, category: String, date: Date }],
+        default: []
+    },
     messages: [{ type: schema.Types.ObjectId, ref: 'Message' }]
 }, { timestamps: true });
 
