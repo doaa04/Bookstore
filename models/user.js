@@ -30,7 +30,7 @@ const userSchema = new schema({
         required: true
     },
     favorites: [{ type: schema.Types.ObjectId, ref: 'Book' }],
-    history: [{ type: schema.Types.ObjectId, ref: 'Book' }],
+    history: [{ type: schema.Types.ObjectId, ref: 'Order' }],
     basket: [{ 
         bookId: { type: schema.Types.ObjectId, ref: 'Book' }, 
         quantity: { type: Number, default: 1 } 

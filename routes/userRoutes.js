@@ -267,7 +267,13 @@ userRouter.get("/user/history", isAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.session.user);
         if (user) {
-            res.render('user/history', { user: user });
+            const history = await Order.find({ user: req.session.user._id })
+            .populate({
+                path: 'books.bookId',
+                model: 'Book'
+            })
+            .populate('user', 'name email');
+            res.render('user/history', { user: user, orders: history });
         } else {
             res.redirect('/user/login');
         }
@@ -505,6 +511,7 @@ userRouter.post('/user/purchase', async (req, res) => {
         }
 
         user.basket = [];
+        user.history.push(savedOrder);
         await user.save();
 
         console.log('Order placed successfully:', savedOrder);

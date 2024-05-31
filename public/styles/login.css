@@ -1,0 +1,103 @@
+body {
+    position: relative;
+    overflow: auto;
+    background: linear-gradient(0deg, #000000, #FECC02);
+    background-size: 200% 200%; 
+    animation: gradient 10s ease infinite;
+    height: 100vh;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 1000px;
+    background-color: white; 
+    border-radius: 50%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container1 {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 300px); 
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.container1 img {
+    max-width: 100px; 
+}
+.container1 h1 {
+    font-family: "Galada", cursive;
+    font-weight: 400;
+    font-style: normal;
+    color: black;
+}
+
+.container input:not(.sub) {
+    border-radius: 20px;
+    margin-bottom: 10px; 
+    background-color: #ECECEC;
+    width: 300px; 
+    height: 40px; 
+    display: block; 
+    border: none;
+    margin-bottom: -10px;
+    color: #777777;
+    padding-left: 15px;
+}
+.container input:not(.sub)::placeholder {
+    font-family: 'BalooBhaina', sans-serif; 
+}
+.container input {
+    font-family: 'BalooBhaina', sans-serif;
+    color: black;
+
+}
+.container input.sub {
+    border-radius: 25px; 
+    font-family: 'BalooBhaina', sans-serif; 
+    font-size: 15px;
+    padding: 10px 20px; 
+    cursor: pointer; 
+    display: block; 
+    margin: 0 auto; 
+    text-align: center; 
+    width: 100px; 
+    height: 50px;
+    background: linear-gradient(-45deg, #000000, #FECC02);
+    transition: all 250ms; 
+    color: white;
+    border: none;
+}
+.container input.sub:hover {
+    transform: scale(1.05) rotate(-1deg);
+    box-shadow:#7777777a 0 -25px 18px -14px inset,#7777777a 0 1px 2px,#7777777a 0 2px 4px,#7777777a 0 4px 8px,#7777777a 0 8px 16px,#7777777a 0 16px 32px; 
+}
+
+.toggle-password {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    top: -20px;
+    width: 20px;
+    height: 20px;
+    background-image: url('/images/eye.png'); 
+    background-size: cover;
+    float: right;
+    left: -10px; 
+}
+.container div {
+    margin-bottom: 20px;
+}
+
+
