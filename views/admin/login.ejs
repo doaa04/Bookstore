@@ -25,6 +25,9 @@
                 <input type="password" id="password" name="password" required>
                 <span class="toggle-password" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" style="color: #ffffff;"></i></span> 
             </div>
+            <% if (typeof error !== 'undefined') { %>
+                <div style="color: red;"><%= error %></div>
+            <% } %>
             <button type="submit">Login</button>
         </form>
     </div>

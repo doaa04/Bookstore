@@ -1,4 +1,5 @@
-.books {
+.books,
+.outOfStock {
     display: flex;
     flex-flow: row wrap;
 }

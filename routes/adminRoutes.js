@@ -14,21 +14,6 @@ const adminRouter = express.Router();
 adminRouter.use(express.urlencoded({ extended: true }));
 
 // routes 
-adminRouter.get('/admin/dashboard', (req, res) => {
-    res.render('admin/dashboard');
-})
-
-adminRouter.get('/admin/home', (req, res) => {
-    Book.find()
-    .then((result) => {
-        console.log('Books fetched:', result);
-        res.render('admin/home' , { books: result });
-    })
-    .catch((err) => {
-        console.error('Error fetching books:', err);
-        console.log(err);
-    })
-})
 
 const bookRoutes = require('./bookRoutes');
 adminRouter.use(bookRoutes);
@@ -39,8 +24,22 @@ adminRouter.use(serviceRoutes);
 const storeRouter = require('./storeRoutes');
 adminRouter.use(storeRouter);
 
+// authentication
+
+async function isAuthenticated(req, res, next) {
+    if (req.session.admin) {
+        next();
+    } else {
+        res.redirect('/admin/login')
+    }
+}
+
+adminRouter.get('/admin/login', (req, res) => {
+    res.render('admin/login')
+})
+
 // search results
-adminRouter.get('/admin/search', (req,res) => {
+adminRouter.get('/admin/search', isAuthenticated, (req,res) => {
     try {
 
         const query = req.query.searchBar;
@@ -76,18 +75,22 @@ adminRouter.get('/admin/search', (req,res) => {
     }
 })
 
-// authentication
-
-async function isAuthenticated(req, res, next) {
-    if (req.session.admin) {
-        next();
-    } else {
-        res.redirect('/admin/login')
+adminRouter.get('/admin/home', isAuthenticated, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.session.admin);
+        Book.find()
+            .then((result) => {
+                console.log('Books fetched:', result);
+                res.render('admin/home' , { books: result });
+            })
+            .catch((err) => {
+                console.error('Error fetching books:', err);
+                console.log(err);
+            })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
     }
-}
-
-adminRouter.get('/admin/login', (req, res) => {
-    res.render('admin/login')
 })
 
 adminRouter.get("/admin/account", isAuthenticated, async (req, res) => {
@@ -150,16 +153,17 @@ adminRouter.post("/admin/login", async (req, res) => {
               console.log(err);
             });
         } else {
-          res.send("Incorrect password");
+            return res.render('admin/login', { error: "Incorrect password" });
         }
       } else {
-        res.send("Admin not found");
+        return res.render('admin/login', { error: "Admin not found" });
       }
     } catch (e) {
       console.error("Error during login:", e);
       res.status(500).send("Internal Server Error");
     }
   });
+
 adminRouter.get('/admin/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -171,7 +175,7 @@ adminRouter.get('/admin/logout', (req, res) => {
         }
     });
 });
-//afficher messages de users.
+
 adminRouter.get('/admin/messaging', isAuthenticated, async (req, res) => {
     try {
         const messages = await Message.find().sort({ date: -1 });
@@ -181,7 +185,7 @@ adminRouter.get('/admin/messaging', isAuthenticated, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
-// Route pour supprimer un message
+
 adminRouter.post('/admin/messages/:id/delete', isAuthenticated, async (req, res) => {
     try {
         await Message.findByIdAndDelete(req.params.id);
@@ -191,6 +195,27 @@ adminRouter.post('/admin/messages/:id/delete', isAuthenticated, async (req, res)
         res.status(500).send('Server Error');
     }
 });
+
+adminRouter.get("/admin/dashboard", isAuthenticated, async (req, res) => {
+    try {
+        if (!req.session.admin) {
+            res.redirect('/user/login');    
+        } else {
+            res.render('admin/dashboard')
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+adminRouter.get('/admin/notifications', isAuthenticated, (req, res) => {
+    res.render('admin/notifications');
+})
+
+adminRouter.get('/admin/settings', isAuthenticated, (req, res) => {
+    res.render('admin/settings');
+})
 
 // exporting the router
 module.exports = adminRouter; 

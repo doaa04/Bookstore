@@ -6,6 +6,14 @@ const Book = require('../models/book');
 
 const bookRouter = express.Router();
 
+async function isAuthenticated(req, res, next) {
+    if (req.session.admin) {
+        next();
+    } else {
+        res.redirect('/admin/login')
+    }
+}
+
 bookRouter.get('/admin/book/:id', (req, res) => {
     const id = req.params.id;
     Book.findById(id)
@@ -32,7 +40,7 @@ const categories = [
     'Music',
     'Art',
     'Cooking'];
-bookRouter.get('/admin/addBook', (req, res) => {
+bookRouter.get('/admin/addBook', isAuthenticated, (req, res) => {
     res.render('admin/addBook', { categories: categories });
 })
 

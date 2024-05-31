@@ -19,6 +19,10 @@ userRouter.use(express.urlencoded({ extended: true }));
 
 // routes 
 
+userRouter.get('/', (req, res) => {
+    res.redirect('/user/home')
+})
+
 userRouter.get('/user/home', async (req, res) => {
     try {
         const books = await Book.find().sort({ createdAt: -1 }).limit(10).exec(); 
@@ -217,10 +221,10 @@ userRouter.post('/user/login', async (req, res) => {
                 };
                 res.status(201).redirect(`/user/home?username=${check.username}`);
             } else {
-                res.send("Incorrect password");
+                return res.render('user/login', { error: "Incorrect password" });
             }
         } else {
-            res.send("User not found"); 
+            return res.render('user/login', { error: "User not found" });
         }
     } catch (e) {
         console.error("Error during login:", e);
@@ -292,14 +296,14 @@ userRouter.get("/user/basket", isAuthenticated, async (req, res) => {
 
 userRouter.post('/user/addToFavorites', async (req, res) => {
     try {
-        const userId = req.session.user._id; 
         const { bookId } = req.body;
 
-        if (!userId) {
+        if (!req.session.user) {
             console.log("User not authenticated");
             return res.status(401).json({ success: false, message: 'User not authenticated' });
         }
 
+        const userId = req.session.user._id; 
         const user = await User.findById(userId);
         if (!user) {
             console.log("User not found");
@@ -340,14 +344,14 @@ userRouter.post('/user/removeFromFavorites', async (req, res) => {
 
 userRouter.post('/user/addToBasket', async (req, res) => {
     try {
-        const userId = req.session.user._id; 
         const { bookId } = req.body;
 
-        if (!userId) {
+        if (!req.session.user) {
             console.log("User not authenticated");
             return res.status(401).json({ success: false, message: 'User not authenticated' });
         }
 
+        const userId = req.session.user._id; 
         const user = await User.findById(userId);
         if (!user) {
             console.log("User not found");
@@ -392,9 +396,18 @@ userRouter.post('/user/removeFromBasket', async (req, res) => {
     }
 });
 
-//gestion de formulaire message.
-userRouter.get('/user/contact', (req, res) => {
-    res.render('user/contact');
+userRouter.get("/user/contact", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/contact', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 userRouter.post('/user/contact', async (req, res) => {
@@ -414,6 +427,34 @@ userRouter.post('/user/contact', async (req, res) => {
         res.redirect('/user/home'); 
     } catch (error) {
         console.error("Error during message submission:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+userRouter.get("/user/notifications", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/notifications', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+userRouter.get("/user/settings", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/settings', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
         res.status(500).send("Internal Server Error");
     }
 });

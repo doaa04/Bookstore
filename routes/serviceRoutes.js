@@ -20,15 +20,22 @@ const serviceStorage = multer.diskStorage({
 })
 const serviceUpload = multer({ storage: serviceStorage });
 
+async function isAuthenticated(req, res, next) {
+    if (req.session.admin) {
+        next();
+    } else {
+        res.redirect('/admin/login')
+    }
+}
 
-serviceRouter.get('/admin/services', (req, res) => {
+serviceRouter.get('/admin/services', isAuthenticated, (req, res) => {
     Service.find() 
     .then(result => {
         res.render('admin/services', { services: result });
     })
 })
 
-serviceRouter.get('/admin/addService', (req, res) => {
+serviceRouter.get('/admin/addService', isAuthenticated, (req, res) => {
     res.render('admin/addService');
 })
 

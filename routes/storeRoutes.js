@@ -3,18 +3,26 @@ const Store = require('../models/store');
 
 const storeRouter = express.Router();
 
-storeRouter.get('/admin/stores', (req, res) => {
+async function isAuthenticated(req, res, next) {
+    if (req.session.admin) {
+        next();
+    } else {
+        res.redirect('/admin/login')
+    }
+}
+
+storeRouter.get('/admin/stores', isAuthenticated, (req, res) => {
     Store.find()
     .then(result => {
         res.render('admin/stores', { stores: result });
     })
 })
 
-storeRouter.get('/admin/addStore', (req, res) => {
+storeRouter.get('/admin/addStore', isAuthenticated, (req, res) => {
     res.render('admin/addStore');
 })
 
-storeRouter.post('/admin/addStore', (req, res) => {
+storeRouter.post('/admin/addStore', isAuthenticated, (req, res) => {
     const store = new Store({
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
@@ -31,7 +39,7 @@ storeRouter.post('/admin/addStore', (req, res) => {
         })
 })
 
-storeRouter.get('/admin/updateStore/:id', (req, res) => {
+storeRouter.get('/admin/updateStore/:id', isAuthenticated, (req, res) => {
     const id = req.params.id;
     Store.findById(id)
     .then(store => {
@@ -39,7 +47,7 @@ storeRouter.get('/admin/updateStore/:id', (req, res) => {
     })
 })
 
-storeRouter.post('/admin/updateStore/:id', async (req, res) => {
+storeRouter.post('/admin/updateStore/:id', isAuthenticated, async (req, res) => {
     const id = req.params.id;
     const store = {
         name: req.body.name,
@@ -51,7 +59,7 @@ storeRouter.post('/admin/updateStore/:id', async (req, res) => {
     res.redirect('/admin/stores');
 })
 
-storeRouter.get('/admin/deleteStore/:id', async (req, res) => {
+storeRouter.get('/admin/deleteStore/:id', isAuthenticated, async (req, res) => {
     const id = req.params.id;
     Store.findByIdAndDelete(id)
     .then(() => {
