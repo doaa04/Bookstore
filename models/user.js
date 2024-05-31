@@ -33,6 +33,10 @@ const userSchema = new schema({
     history: [{ type: schema.Types.ObjectId, ref: 'Book' }],
     basket: [{ type: schema.Types.ObjectId, ref: 'Book' }],
     notifications: [{ type: schema.Types.ObjectId, ref: 'Notification' }],
+    searchHistory: {
+        type: [{ query: String, category: String, date: Date }],
+        default: []
+    },
     messages: [{ type: schema.Types.ObjectId, ref: 'Message' }]
 }, { timestamps: true });
 

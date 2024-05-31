@@ -10,10 +10,31 @@
 <body>
     
     <%- include('../partials/navbar') %>
-
     <%- include('../partials/sidebar') %>
 
     <div class="content">
+        <!-- Recommendations Section -->
+        <div class="recommendations">
+            <% if (recommendations.length > 0) { %>
+                <h2>Recommendations for you</h2>
+                <div class="carousel-container">
+                    <button class="carousel-button left" onclick="moveCarousel(-1)">&#10094;</button>
+                    <div class="carousel">
+                        <div class="carousel-inner">
+                            <% recommendations.forEach(book => { %>
+                                <div class="carousel-item">
+                                    <%- include('../partials/bookDisplay', { book: book, userType: 'user' }) %>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <button class="carousel-button right" onclick="moveCarousel(1)">&#10095;</button>
+                </div>
+            <% } else { %>
+                <p> </p>
+            <% } %>
+        </div>
+        <!-- Books Section -->
         <div class="books">
             <% if (books.length > 0) { %>
                 <% books.forEach(book => { %>
@@ -21,9 +42,73 @@
                 <% }) %>
             <% } %>
         </div>
+
+        
     </div>
 
     <%- include('../partials/footer') %>
+    <script >let currentIndex = 0;
 
+        function moveCarousel(direction) {
+            const carouselInner = document.querySelector('.carousel-inner');
+            const items = document.querySelectorAll('.carousel-item');
+            const itemWidth = items[0].offsetWidth + 20; 
+            const visibleItems = Math.floor(document.querySelector('.carousel').offsetWidth / itemWidth);
+        
+            currentIndex += direction;
+        
+            if (currentIndex < 0) {
+                currentIndex = 0;
+            } else if (currentIndex > items.length - visibleItems) {
+                currentIndex = items.length - visibleItems;
+            }
+        
+            carouselInner.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        }</script>
+        <style>.carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        
+        .carousel {
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: fit-content; 
+        }
+        
+        .carousel-item {
+            min-width: 200px;
+            margin-right: 20px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+        
+        .carousel-button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .carousel-button.left {
+            left: 0;
+        }
+        
+        .carousel-button.right {
+            right: 0;
+        }</style>
 </body>
 </html>

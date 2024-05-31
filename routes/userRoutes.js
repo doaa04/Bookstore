@@ -14,19 +14,52 @@ userRouter.use(express.urlencoded({ extended: true }));
 
 // routes 
 
-userRouter.get('/', (req, res) => {
-    res.redirect('/user/home');
-})
+userRouter.get('/user/home', async (req, res) => {
+    try {
+        const books = await Book.find().sort({ createdAt: -1 }).limit(10).exec(); 
 
-userRouter.get('/user/home', (req, res) => {
-    Book.find()
-    .then((result) => {
-        res.render('user/home' , { books: result });
-    })
-    .catch((err) => {
+        let recommendations = [];
+
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+
+            if (user.searchHistory && user.searchHistory.length > 0) {
+                // Obtenir les catégories et auteurs des recherches récentes
+                const categories = user.searchHistory
+                    .filter(item => item.category)
+                    .map(item => item.category);
+                const queries = user.searchHistory
+                    .filter(item => item.query)
+                    .map(item => item.query);
+
+                // Rechercher des livres basés sur les catégories et auteurs recherchés
+                if (categories.length > 0) {
+                    recommendations = await Book.find({
+                        categories: { $in: categories }
+                    }).limit(10).exec();
+                } else if (queries.length > 0) {
+                    recommendations = await Book.find({
+                        $or: [
+                            { title: { $regex: queries.join('|'), $options: 'i' } },
+                            { author: { $regex: queries.join('|'), $options: 'i' } },
+                            { series: { $regex: queries.join('|'), $options: 'i' } },
+                            { categories: { $regex: queries.join('|'), $options: 'i' } }
+                        ]
+                    }).limit(10).exec();
+                }
+            }
+        }
+
+        res.render('user/home', { books: books, recommendations: recommendations });
+
+    } catch (err) {
         console.log(err);
-    })
-})
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
 
 userRouter.get('/user/book/:id', (req, res) => {
     const id = req.params.id;
@@ -47,41 +80,45 @@ userRouter.get('/user/services', (req, res) => {
 })
 
 // search results
-userRouter.get('/user/search', (req,res) => {
+userRouter.get('/user/search', async (req, res) => {
     try {
-
         const query = req.query.searchBar;
-        var searchResults;
-        
-        if (req.query.category) {
-            searchResults = Book.find({
-                 categories: { $regex: req.query.category, $options: 'i' }
-            })
-            .exec()
-            .then(searchResults => {
-                res.render('user/searchResults', { searchResults: searchResults });
-            });
+        const category = req.query.category;
+
+        const searchQuery = { query: query || "", category: category || "", date: new Date() };
+
+        // Enregistrer la recherche dans l'historique de l'utilisateur
+        if (req.session.user) {
+            const user = await User.findById(req.session.user._id);
+            user.searchHistory.push(searchQuery);
+            await user.save();
         }
 
-        else {
-            searchResults = Book.find({
+        let searchResults;
+
+        if (category) {
+            searchResults = await Book.find({
+                categories: { $regex: category, $options: 'i' }
+            }).exec();
+        } else {
+            searchResults = await Book.find({
                 $or: [
                     { title: { $regex: query, $options: 'i' } },
                     { author: { $regex: query, $options: 'i' } },
                     { series: { $regex: query, $options: 'i' } },
                     { categories: { $regex: query, $options: 'i' } }
                 ]
-            })
-            .exec()
-            .then(searchResults => {
-                res.render('user/searchResults', { searchResults: searchResults });
-            });
+            }).exec();
         }
-    
+
+        res.render('user/searchResults', { searchResults: searchResults });
+
     } catch (err) {
         console.log(err);
+        res.status(500).send("Internal Server Error");
     }
-})
+});
+
 
 userRouter.get('/user/stores', (req, res) => {
     Store.find()
@@ -368,6 +405,7 @@ userRouter.post('/user/contact', async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 
 // exporting the router
