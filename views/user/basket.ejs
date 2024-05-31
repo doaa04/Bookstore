@@ -38,7 +38,7 @@
             </div>
             <% if (basket.length > 0) { %>
                 <% basket.forEach(book => { %>
-                    <div class="product" data-price="<%= book.price %>">
+                    <div class="product" data-price="<%= book.price %>" data-book-id="<%= book._id %>">
                         <div class="cover">
                             <img class="bookCover" src="/covers/<%= book.imageUrl %>" alt="Book Cover">
                         </div>
@@ -64,6 +64,8 @@
                 <div class="totalPrice">
                     <h3>Total: $<span id="totalPrice">0.00</span></h3>
                 </div>
+                <button class="purchaseBtn" type="button">Purchase</button>
+                <button class="borrowBtn" type="button">Borrow</button>
             <% } else { %>
                 <p>Your basket is empty.</p>
             <% } %>
@@ -119,8 +121,26 @@
     .totalPrice {
         margin-top: 20px;
     }
+    .purchaseBtn,
+    .borrowBtn {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: rgba(255, 210, 0, 1);
+        color: black;
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+    .purchaseBtn:hover,
+    .borrowBtn:hover {
+        cursor: pointer;
+        transform: scale(1.1);
+    }
 </style>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
+    var stripePublicKey = '<%= stripePublicKey %>'
+
     document.addEventListener('DOMContentLoaded', function() {
         var quantityInputs = document.querySelectorAll('.quantity');
         var totalPriceElement = document.getElementById('totalPrice');
@@ -178,5 +198,56 @@
             alert('An error occurred. Please try again.');
         });
     }
+
+
+    var stripeHandler = StripeCheckout.configure({
+        key: stripePublicKey,
+        locale: 'en',
+        token: function(token) {
+            var books = [];
+            var productContainers = document.querySelectorAll('.product');
+            productContainers.forEach(function(container) {
+                var bookId = container.getAttribute('data-book-id');
+                var quantityInput = container.querySelector('.quantity');
+                var bookQuantity = parseInt(quantityInput.value);
+                books.push({ bookId: bookId, quantity: bookQuantity });
+            });
+
+            fetch('/user/purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    token: token,
+                    books: books
+                })
+            })  
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order placed successfully!');
+                } else {
+                    console.error('Failed to place order:', data.message);
+                    alert('Failed to place order: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        } 
+    });
+
+    document.querySelector('.purchaseBtn').addEventListener('click', function() {
+        var totalPrice = parseFloat(document.getElementById('totalPrice').innerText) * 100; // Convert to cents
+        stripeHandler.open({
+            amount: totalPrice,
+            name: 'JupiReads',
+            description: 'Book Purchase',
+            currency: 'usd'
+        });
+    });
 </script>
 </html>

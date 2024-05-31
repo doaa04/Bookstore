@@ -12,7 +12,7 @@ const adminSchema = new schema({
         required: true
     },
     notifications: [{ type: schema.Types.ObjectId, ref: 'Notification' }],
-    messages: [{ type: schema.Types.ObjectId, ref: 'Message' }]
+    messages: [{ type: schema.Types.ObjectId, ref: 'Message' }],
 }, { timestamps: true });
 
 

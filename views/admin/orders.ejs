@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JupiReads | Orders</title>
+    <link rel="stylesheet" href="/styles/home.css">
+    <%- include('../partials/fonts') %>
+</head>
+<body>
+    
+    <%- include('../partials/adminNavbar') %>
+
+    <%- include('../partials/adminSidebar') %>
+
+    <div class="content">
+        <h1>Orders</h1>
+        <div class="orders">
+            <% if (orders.length > 0) { %>
+                <% orders.forEach(order => { %>
+                    <div class="order">
+                        <div class="orderInfo">
+                            <p><strong>Order ID: </strong><%= order._id %></p>
+                            <p><strong>Ordered by: </strong><%= order.user.email %></p>
+                            <p><strong>Order Date: </strong><%= new Date(order.createdAt).toLocaleString() %></p>
+                        </div>
+                        <div class="orderItemsHeader">
+                            <div class="cover"><p><strong>Cover</strong></p></div>
+                            <div class="title"><p><strong>Title</strong></p></div>
+                            <div class="author"><p><strong>Author</strong></p></div>
+                            <div class="price"><p><strong>Price</strong></p></div>
+                            <div class="quantity"><p><strong>Quantiy</strong></p></div>
+                        </div>
+                        <% order.books.forEach(book => { %>
+                            <div class="orderItem">
+                                <div class="cover">
+                                    <img src="/covers/<%= book.bookId.imageUrl %>">
+                                </div>
+                                <div class="title"><p><%= book.bookId.title %></p></div>
+                                <div class="author"><p><%= book.bookId.author %></p></div>
+                                <div class="price"><p><%= book.bookId.price %></p></div>
+                                <div class="quantity"><p><%= book.quantity %></p></div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No orders found.</p>
+            <% } %>
+        </div>
+    </div>
+    
+
+    <%- include('../partials/footer') %>
+
+</body>
+<style>
+    .order {
+        margin-top: 20px;
+        margin-right: 40px;
+        border-radius: 20px;
+    }
+    .orderInfo {
+        background-color: rgb(233, 228, 228);
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+    .orderItem {
+        background-color: rgb(255, 255, 255);
+        border-top: 1px solid black;
+    }
+    .orderItem div,
+    .orderItemsHeader div {
+        margin: 10px;
+    }
+    .orderItemsHeader,
+    .orderItem {
+        display: flex;
+        justify-content: space-between;
+    }
+    .cover {
+        width: 150px;
+    }
+    .cover img {
+        width: 100px;
+        border-radius: 20px;
+    }
+    .title {
+        width: 200px;
+    }
+    .quantity,
+    .price {
+        width: 100px;
+    }
+    .author {
+        width: 200px;
+    }
+</style>
+</html>

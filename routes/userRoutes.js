@@ -3,10 +3,15 @@ const Book = require('../models/book');
 const Service = require('../models/service');
 const Store = require('../models/store');
 const User = require('../models/user');
+const Order = require('../models/order');
+const Admin = require('../models/order');
 const session = require('express-session');
 const bcrypt = require("bcrypt")
 const mongoose = require('mongoose');
 const Message = require('../models/message');
+
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
 
 const userRouter = express.Router();
 
@@ -275,7 +280,7 @@ userRouter.get("/user/basket", isAuthenticated, async (req, res) => {
             const basketBooks = await Book.find({
                 _id: { $in: user.basket }
             }).exec();
-            res.render('user/basket', { basket: basketBooks });
+            res.render('user/basket', { basket: basketBooks, stripePublicKey: stripePublicKey });
         } else {
             res.redirect('/user/login');
         }
@@ -406,6 +411,47 @@ userRouter.post('/user/contact', async (req, res) => {
     }
 });
 
+
+
+userRouter.post('/user/purchase', async (req, res) => {
+    try {
+        const userId = req.session.user._id; 
+        if (!userId) {
+            console.log("User not authenticated");
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            console.log("User not found");
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const token = req.body.token;
+        const books = req.body.books;
+
+        const orderBooks = books.map(book => ({
+            bookId: new mongoose.Types.ObjectId(book.bookId),
+            quantity: book.quantity
+        }));
+
+        const newOrder = new Order({
+            books: orderBooks,
+            user: userId
+        });
+
+        const savedOrder = await newOrder.save();
+
+        user.basket = [];
+        await user.save();
+
+        console.log('Order placed successfully:', savedOrder);
+        return res.status(200).json({ success: true, message: 'Order placed successfully', order: savedOrder });
+    } catch (error) {
+        console.error('Error placing order:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
 
 
 // exporting the router

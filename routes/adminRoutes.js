@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const Book = require('../models/book');
+const Order = require('../models/order');
 const Admin = require('../models/admin');
 const bcrypt = require("bcrypt")
 const Message = require('../models/message');
@@ -103,33 +104,29 @@ adminRouter.get("/admin/account", isAuthenticated, async (req, res) => {
     }
 });
 
-// adminRouter.post('/admin/login', async (req, res) => {
-//     try {
-//         const check = await Admin.findOne({ email: req.body.email });
+adminRouter.get("/admin/orders", isAuthenticated, async (req, res) => {
+    try {
+        const admin = await Admin.findOne();
 
-//         if (check) { 
-//             const isMatch = await bcrypt.compare(req.body.password, check.password);
+        if (!admin) {
+            console.log("Admin not found");
+            return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
 
-//             if (isMatch) {
-//                 req.session.admin = {
-//                     _id: check._id,
-//                     password: check.password,
-//                     email: check.email,
-//                     notifications: check.notifications,
-//                     messages: check.messages
-//                 };
-//                 res.status(201).render('admin/home');
-//             } else {
-//                 res.send("Incorrect password");
-//             }
-//         } else {
-//             res.send("Admin not found"); 
-//         }
-//     } catch (e) {
-//         console.error("Error during login:", e);
-//         res.status(500).send("Internal Server Error");
-//     }
-// });
+        const orders = await Order.find()
+        .populate({
+            path: 'books.bookId',
+            model: 'Book'
+        })
+        .populate('user', 'name email');
+
+        res.render('admin/orders', { orders: orders });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 adminRouter.post("/admin/login", async (req, res) => {
     try {
       const check = await Admin.findOne({ email: req.body.email });

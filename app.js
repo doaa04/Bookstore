@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 const express = require('express');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
@@ -32,7 +36,6 @@ app.use(session({
 
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
-app.use('/user/addToFavorites', userRoutes);
 
 const adminRoutes = require('./routes/adminRoutes');
 app.use(adminRoutes);
