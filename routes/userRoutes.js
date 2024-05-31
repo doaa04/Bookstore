@@ -336,7 +336,13 @@ userRouter.post('/user/removeFromBasket', async (req, res) => {
     const { bookId } = req.body;
 
     try {
-        const user = await User.findByIdAndUpdate(req.session.user._id, { $pull: { basket: bookId } }, { new: true });
+        const user = await User.findByIdAndUpdate(
+            req.session.user._id,
+            { $pull: { basket: { _id: bookId } } },
+            { new: true }
+        );
+        
+        console.log(user.basket);
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
@@ -348,6 +354,7 @@ userRouter.post('/user/removeFromBasket', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
 //gestion de formulaire message.
 userRouter.get('/user/contact', (req, res) => {
     res.render('user/contact');
@@ -403,6 +410,20 @@ userRouter.post('/user/purchase', async (req, res) => {
         });
 
         const savedOrder = await newOrder.save();
+
+        for (const book of orderBooks) {
+            const updatedBook = await Book.findByIdAndUpdate(
+                book.bookId,
+                {
+                    $inc: {
+                        availableCopies: -book.quantity,
+                        sales: book.quantity
+                    }
+                },
+                { new: true }
+            );
+            console.log(`Updated book: ${updatedBook}`);
+        }
 
         user.basket = [];
         await user.save();

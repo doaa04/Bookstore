@@ -20,28 +20,35 @@
                 <% orders.forEach(order => { %>
                     <div class="order">
                         <div class="orderInfo">
-                            <p><strong>Order ID: </strong><%= order._id %></p>
-                            <p><strong>Ordered by: </strong><%= order.user.email %></p>
-                            <p><strong>Order Date: </strong><%= new Date(order.createdAt).toLocaleString() %></p>
-                        </div>
-                        <div class="orderItemsHeader">
-                            <div class="cover"><p><strong>Cover</strong></p></div>
-                            <div class="title"><p><strong>Title</strong></p></div>
-                            <div class="author"><p><strong>Author</strong></p></div>
-                            <div class="price"><p><strong>Price</strong></p></div>
-                            <div class="quantity"><p><strong>Quantiy</strong></p></div>
-                        </div>
-                        <% order.books.forEach(book => { %>
-                            <div class="orderItem">
-                                <div class="cover">
-                                    <img src="/covers/<%= book.bookId.imageUrl %>">
-                                </div>
-                                <div class="title"><p><%= book.bookId.title %></p></div>
-                                <div class="author"><p><%= book.bookId.author %></p></div>
-                                <div class="price"><p><%= book.bookId.price %></p></div>
-                                <div class="quantity"><p><%= book.quantity %></p></div>
+                            <div>
+                                <p><strong>Order ID: </strong><%= order._id %></p>
+                                <p><strong>Ordered by: </strong><%= order.user.email %></p>
+                                <p><strong>Order Date: </strong><%= new Date(order.createdAt).toLocaleString() %></p>
                             </div>
-                        <% }) %>
+                            <div>
+                                <button class="showItemsBtn">Show order items</button>
+                            </div>
+                        </div>
+                        <div class="orderItems">
+                            <div class="orderItemsHeader">
+                                <div class="cover"><p><strong>Cover</strong></p></div>
+                                <div class="title"><p><strong>Title</strong></p></div>
+                                <div class="author"><p><strong>Author</strong></p></div>
+                                <div class="price"><p><strong>Price</strong></p></div>
+                                <div class="quantity"><p><strong>Quantity</strong></p></div>
+                            </div>
+                            <% order.books.forEach(book => { %>
+                                <div class="orderItem">
+                                    <div class="cover">
+                                        <img src="/covers/<%= book.bookId.imageUrl %>">
+                                    </div>
+                                    <div class="title"><p><%= book.bookId.title %></p></div>
+                                    <div class="author"><p><%= book.bookId.author %></p></div>
+                                    <div class="price"><p><%= book.bookId.price %></p></div>
+                                    <div class="quantity"><p><%= book.quantity %></p></div>
+                                </div>
+                            <% }) %>
+                        </div>
                     </div>
                 <% }) %>
             <% } else { %>
@@ -52,18 +59,20 @@
     
 
     <%- include('../partials/footer') %>
-
 </body>
 <style>
     .order {
         margin-top: 20px;
         margin-right: 40px;
-        border-radius: 20px;
+        border: 2px solid rgb(233, 228, 228);
     }
     .orderInfo {
         background-color: rgb(233, 228, 228);
-        padding: 20px;
-        margin-bottom: 10px;
+        padding: 10px;
+        margin-bottom: 4px;
+    }
+    .orderItems {
+        display: none;
     }
     .orderItem {
         background-color: rgb(255, 255, 255);
@@ -95,5 +104,31 @@
     .author {
         width: 200px;
     }
+    .showItemsBtn {
+        margin-top: 5px;
+        border: none;
+        color: rgb(110, 79, 0);
+        font-style: oblique;
+        background-color: transparent;
+    }
 </style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showItemsButtons = document.querySelectorAll('.showItemsBtn');
+
+        showItemsButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const orderInfo = button.closest('.order').querySelector('.orderInfo');
+                const orderItems = orderInfo.nextElementSibling;
+                if (orderItems.style.display === 'none') {
+                    orderItems.style.display = 'block';
+                    button.textContent = 'Hide order items';
+                } else {
+                    orderItems.style.display = 'none';
+                    button.textContent = 'Show order items';
+                }
+            });
+        });
+    });
+</script>
 </html>

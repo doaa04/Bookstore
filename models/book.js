@@ -46,7 +46,7 @@ const bookSchema = new schema({
         required: true
     },
     availableCopies: {
-        type: String,
+        type: Number,
         required: true
     },
     imageUrl: {
@@ -54,7 +54,8 @@ const bookSchema = new schema({
         required: true
     },
     sales: {
-        type: Number
+        type: Number,
+        default: 0
     },
     comments: [{ type: schema.Types.ObjectId, ref: 'Comment' }]
 }, { timestamps: true });
