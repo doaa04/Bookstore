@@ -402,9 +402,9 @@ userRouter.post('/user/likeComment', async (req, res) => {
         comment.likes += 1;
         await comment.save();
 
-        res.status(200).json({ success: true, message: 'Comment added' });
+        res.status(200).json({ success: true, message: 'Like added' });
     } catch (error) {
-        console.error('Error adding book to favorites:', error);
+        console.error('Error liking book:', error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
