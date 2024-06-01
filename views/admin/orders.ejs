@@ -16,9 +16,15 @@
     <div class="content">
         <div class="orders">
             <% if (orders.length > 0) { %>
+                <h3>you have <%= ordersCount %> orders</h3>
                 <% orders.forEach(order => { %>
                     <div class="order">
                         <div class="orderInfo">
+                            <div>
+                                <button class="markAsDeliveredBtn">
+                                    <i class="fa-solid fa-trash" style="color: #0d0d0d;" title="remove order" onclick="deleteOrder('<%= order._id %>')"></i>
+                                </button>
+                            </div>
                             <div>
                                 <p><strong>Order ID: </strong><%= order._id %></p>
                                 <p><strong>Ordered by: </strong><%= order.user.email %></p>
@@ -69,6 +75,14 @@
         background-color: rgb(233, 228, 228);
         padding: 10px;
         margin-bottom: 4px;
+    }
+    .orderInfo .markAsDeliveredBtn {
+        float: right;
+        border: none;
+        transition: 3s ease;
+    }
+    .orderInfo .markAsDeliveredBtn i:hover {
+        transform: scale(1.1);
     }
     .orderItems {
         display: none;
@@ -129,5 +143,30 @@
             });
         });
     });
+
+    function deleteOrder(orderId) {
+        console.log('Removing order with ID:', orderId); 
+        fetch('/admin/deleteOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ orderId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order removed.');
+                window.location.reload();
+            } else {
+                console.error('Failed to remove order:', data.message);
+                alert('Failed to remove order: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
 </script>
 </html>

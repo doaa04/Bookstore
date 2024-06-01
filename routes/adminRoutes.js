@@ -116,14 +116,16 @@ adminRouter.get("/admin/orders", isAuthenticated, async (req, res) => {
             return res.status(404).json({ success: false, message: 'Admin not found' });
         }
 
-        const orders = await Order.find()
+        const orders = await Order.find({ _id: { $nin: admin.delivered } })
         .populate({
             path: 'books.bookId',
             model: 'Book'
         })
         .populate('user', 'name email');
 
-        res.render('admin/orders', { orders: orders });
+        const ordersCount = await Order.countDocuments({ _id: { $nin: admin.delivered } });
+
+        res.render('admin/orders', { orders: orders, ordersCount: ordersCount });
     } catch (error) {
         console.error('Error fetching orders:', error);
         return res.status(500).json({ success: false, message: 'Server error' });
@@ -193,6 +195,29 @@ adminRouter.post('/admin/messages/:id/delete', isAuthenticated, async (req, res)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error');
+    }
+});
+
+adminRouter.post('/admin/deleteOrder', async (req, res) => {
+    const { orderId } = req.body;
+
+    try {
+        const admin = await Admin.findByIdAndUpdate(
+            req.session.admin._id,
+            { $addToSet: { delivered: orderId } },
+            { new: true }
+        );
+        
+        console.log(admin.delivered);
+
+        if (!admin) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Order removed' });
+    } catch (error) {
+        console.error('Error removing order:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 

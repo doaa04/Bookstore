@@ -13,6 +13,7 @@ const adminSchema = new schema({
     },
     notifications: [{ type: schema.Types.ObjectId, ref: 'Notification' }],
     messages: [{ type: schema.Types.ObjectId, ref: 'Message' }],
+    delivered: [{ type: schema.Types.ObjectId, ref: 'Order' }]
 }, { timestamps: true });
 
 
