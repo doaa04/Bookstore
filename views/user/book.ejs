@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JupiReads | <%= book.title %></title>
     <link rel="stylesheet" href="/styles/book.css">
+    <link rel="stylesheet" href="/styles/addForm.css">
     <%- include('../partials/fonts') %>
 </head>
 <body>
@@ -102,29 +103,6 @@
             } else {
                 console.error('Failed to like comment:', data.message);
                 alert('Failed to like comment: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred. Please try again.');
-        });
-    }
-
-    function reportComment(commentId) {
-        fetch('/user/reportComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ commentId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Comment reported.')
-            } else {
-                console.error('Failed to report comment:', data.message);
-                alert('Failed to report comment: ' + data.message);
             }
         })
         .catch(error => {

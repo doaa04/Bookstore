@@ -5,6 +5,7 @@ const Store = require('../models/store');
 const User = require('../models/user');
 const Order = require('../models/order');
 const Admin = require('../models/admin');
+const Comment = require('../models/comment');
 const Notification = require('../models/notification');
 const session = require('express-session');
 const bcrypt = require("bcrypt")
@@ -71,16 +72,60 @@ userRouter.get('/user/home', async (req, res) => {
 
 
 
-userRouter.get('/user/book/:id', (req, res) => {
-    const id = req.params.id;
-    Book.findById(id)
-    .then(result => {
-        res.render('user/book',{ book: result })
-    })
-    .catch(err => {
-        console.log(err);
-    })
+userRouter.get('/user/book/:id', async (req, res) => {
+    try {
+        const bookId = req.params.id;
+        const book = await Book.findById(bookId).populate({
+            path: 'comments',
+            populate: {
+                path: 'user', 
+                model: 'User' 
+            }
+        });
+        if (!book) {
+            res.status(404).send('Book not found');
+        }
+        res.render('user/book', { book: book });
+    } catch (error) {
+        console.error('Error fetching book details:', error);
+        res.status(500).send('Error fetching book details');
+    }
 })
+
+userRouter.post('/book/:bookId/comment', async (req, res) => {
+    try {
+        const { content } = req.body;
+        const user = req.session.user._id;
+        const bookId = req.params.bookId;
+        
+        if (!content) {
+            res.status(400).send('Content ');
+        }
+
+        if (!user) {
+            res.status(400).send('User');
+        }
+        
+        const newComment = new Comment({
+            content,
+            user,
+            book: bookId
+        });
+        await newComment.save();
+
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).send('Book not found');
+        }
+        book.comments.push(newComment._id);
+        await book.save();
+
+        res.redirect(`/user/book/${bookId}`);
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).send('Error adding comment');
+    }
+});
 
 userRouter.get('/user/services', (req, res) => {
     Service.find()
@@ -356,52 +401,6 @@ userRouter.post('/user/likeComment', async (req, res) => {
 
         comment.likes += 1;
         await comment.save();
-
-        res.status(200).json({ success: true, message: 'Comment added' });
-    } catch (error) {
-        console.error('Error adding book to favorites:', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
-    }
-});
-
-userRouter.post('/user/reportComment', async (req, res) => {
-    try {
-        const { commentId } = req.body;
-
-        if (!req.session.user) {
-            console.log("User not authenticated");
-            return res.status(401).json({ success: false, message: 'User not authenticated' });
-        }
-
-        const userId = req.session.user._id; 
-        const user = await User.findById(userId);
-        if (!user) {
-            console.log("User not found");
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        const comment = await Comment.findById(commentId);
-        if (!comment) {
-            console.log("Comment not found");
-            return res.status(404).json({ success: false, message: 'Comment reported' });
-        }
-
-        const notification = new Notification({
-            object: 'Reported Comment',
-            body: `User ${user.username} reported a comment with ID ${comment._id} from the book : ${comment.book.title}`,
-        });
-        await notification.save();
-    
-        const admins = await Admin.find();
-        const adminUpdates = admins.map(admin =>
-            Admin.findByIdAndUpdate(
-                admin._id,
-                { $push: { notifications: notification._id } }
-            )
-        );
-
-        await Promise.all(adminUpdates);
-        
 
         res.status(200).json({ success: true, message: 'Book added to favorites' });
     } catch (error) {
