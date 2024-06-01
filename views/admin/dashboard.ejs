@@ -13,11 +13,146 @@
 
     <%- include('../partials/adminSidebar') %>
 
-    <div class="content">
-        <h1>Dashboard</h1>
+    <div class="dashboard">
+        <div class="card card-books" id="totalBooks"></div>
+        <div class="card card-users" id="totalUsers"></div>
+        <div class="card card-orders" id="totalOrders"></div>
+        <div class="card card-out-of-stock" id="outOfStockBooks"></div>
+        
+        <canvas id="topBooksChart"></canvas>
+      
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM fully loaded and parsed');
+    try {
+        const response = await fetch('/admin/stats');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log('Data fetched:', data);
 
-    <%- include('../partials/footer') %>
+        document.getElementById('totalBooks').innerText = `Total Books: ${data.totalBooks}`;
+        document.getElementById('totalUsers').innerText = `Total Users: ${data.totalUsers}`;
+        document.getElementById('totalOrders').innerText = `Total Orders: ${data.totalOrders}`;
+        document.getElementById('outOfStockBooks').innerText = `Out of Stock: ${data.outOfStockBooks}`;
+
+        const topBooksChartCtx = document.getElementById('topBooksChart').getContext('2d');
+        const categoryChartCtx = document.getElementById('categoryChart').getContext('2d');
+
+        
+        new Chart(topBooksChartCtx, {
+            type: 'bar',
+            data: {
+                labels: data.topBooks.map(book => book.title),
+                datasets: [{
+                    label: 'Sales',
+                    data: data.topBooks.map(book => book.sales),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart(categoryChartCtx, {
+            type: 'pie',
+            data: {
+                labels: data.categoryStats.map(cat => cat._id),
+                datasets: [{
+                    data: data.categoryStats.map(cat => cat.count),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching admin stats:', error);
+    }
+});
+
+    </script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 20px;
+    margin-left: 70px;
+    margin-top: 70px;
+}
+
+.card {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 16px; 
+    font-weight: bold;
+    width: 500px;
+}
+
+.card-books {
+    background-color:  rgb(213, 174, 0); 
+}
+
+.card-users {
+    background-color: rgb(188, 181, 152); 
+}
+
+.card-orders {
+    background-color: grey; 
+}
+
+.card-out-of-stock {
+    background-color:rgba(255, 210, 0, 1);
+}
+
+
+canvas {
+    width: 100%;
+    max-width: 400px; 
+    height: 300px;
+    margin: auto;
+    display: block;
+    margin-top: 10px;
+}
+
+    </style>
+    <%- include('../partials/footerA') %>
 
 </body>
 </html>

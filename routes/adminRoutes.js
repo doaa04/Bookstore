@@ -7,6 +7,7 @@ const Order = require('../models/order');
 const Admin = require('../models/admin');
 const bcrypt = require("bcrypt")
 const Message = require('../models/message');
+const adminController = require('../controllers/adminController');  
 
 const adminRouter = express.Router();
 
@@ -241,6 +242,19 @@ adminRouter.get('/admin/notifications', isAuthenticated, (req, res) => {
 adminRouter.get('/admin/settings', isAuthenticated, (req, res) => {
     res.render('admin/settings');
 })
+
+//dash 
+adminRouter.get('/stats', async (req, res) => {
+    try {
+        const stats = await adminController.getAdminStats(req, res);
+        res.json(stats);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+adminRouter.get('/admin/stats', isAuthenticated, adminController.getAdminStats);
+
 
 // exporting the router
 module.exports = adminRouter; 
