@@ -698,6 +698,62 @@ userRouter.post('/user/deleteNotification', async (req, res) => {
     }
 });
 
+//update profile
+userRouter.post('/user/updateProfile', isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user._id);
+
+        if (!user) {
+            return res.status(404).render('user/settings', { error: 'User not found' });
+        }
+
+        const { username, email, phoneNumber, address, birthday, currentPassword, newPassword, confirmPassword } = req.body;
+
+        // Check if current password matches
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).render('user/settings', { error: 'Incorrect current password', user: user });
+        }
+
+        // Update user details
+        user.username = username;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+        user.address = address;
+        user.birthday = new Date(birthday);
+
+        // Update password if new password is provided
+        if (newPassword) {
+            if (newPassword !== confirmPassword) {
+                return res.status(400).render('user/settings', { error: 'New passwords do not match', user: user });
+            }
+            user.password = await bcrypt.hash(newPassword, 10);
+        }
+
+        await user.save();
+        res.render('user/settings', { success: 'Profile updated successfully', user: user });
+
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).render('user/settings', { error: 'Internal Server Error', user: req.session.user });
+    }
+});
+
+userRouter.get("/user/settings", isAuthenticated, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+        if (user) {
+            res.render('user/settings', { user: user });
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
 
 // exporting the router
 module.exports = userRouter; 
