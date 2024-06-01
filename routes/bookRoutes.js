@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 const Book = require('../models/book');
+const User = require('../models/user');
+const Notification = require('../models/notification');
 
 const bookRouter = express.Router();
 
@@ -57,7 +59,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage });
 
-bookRouter.post('/admin/addBook', upload.single("cover"), (req, res) => {
+bookRouter.post('/admin/addBook', upload.single("cover"), async (req, res) => {
     const coverFileName = req.file.filename;
     const imageUrl = `/covers/${coverFileName}`;
     const newBook = new Book({
@@ -74,14 +76,26 @@ bookRouter.post('/admin/addBook', upload.single("cover"), (req, res) => {
         availableCopies: req.body.availableCopies,
         imageUrl: coverFileName
     });
-    newBook.save()
-        .then(book => {
-            res.redirect('/admin/addBook');
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).send('Error adding book');
-        });
+    
+    await newBook.save();
+
+    const notification = new Notification({
+        object: `New Book: ${newBook.title}`,
+        body: `A new book titled "${newBook.title}" by ${newBook.author} has been added to the library.`
+    });
+    await notification.save();
+
+    const users = await User.find();
+    const userUpdates = users.map(user =>
+        User.findByIdAndUpdate(
+            user._id,
+            { $push: { notifications: notification._id } }
+        )
+    );
+
+    await Promise.all(userUpdates);
+
+    res.redirect('/admin/addBook');
 })
 
 bookRouter.delete('/admin/home/:id', (req, res) => {
@@ -117,7 +131,7 @@ bookRouter.post('/admin/updateBookData/:id', upload.single("cover"), async (req,
         const oldImageUrl = existingBook.imageUrl;
 
         if (req.file) {
-            fs.unlinkSync(path.join(__dirname, '../public', oldImageUrl));
+            fs.unlinkSync(path.join(__dirname, '../public/covers', oldImageUrl));
         }
 
         const categoriesArray = JSON.parse(req.body.selectedCategories);

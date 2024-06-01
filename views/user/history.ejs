@@ -63,19 +63,30 @@
     .order {
         margin-top: 20px;
         margin-right: 40px;
-        border: 2px solid rgb(233, 228, 228);
+        border: 1px solid rgb(233, 228, 228);
+        border-radius: 10px;
     }
     .orderInfo {
-        background-color: rgb(233, 228, 228);
+        background-color: #f9f9f9;
         padding: 10px;
         margin-bottom: 4px;
+        border-radius: 10px;
+    }
+    .orderInfo .markAsDeliveredBtn {
+        float: right;
+        border: none;
+        transition: 3s ease;
+    }
+    .orderInfo .markAsDeliveredBtn i:hover {
+        transform: scale(1.1);
     }
     .orderItems {
         display: none;
     }
     .orderItem {
         background-color: rgb(255, 255, 255);
-        border-top: 1px solid black;
+        border-top: 1px solid rgb(233, 228, 228);
+        border-radius: 10px;
     }
     .orderItem div,
     .orderItemsHeader div {
