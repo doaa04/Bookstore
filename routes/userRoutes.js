@@ -4,7 +4,8 @@ const Service = require('../models/service');
 const Store = require('../models/store');
 const User = require('../models/user');
 const Order = require('../models/order');
-const Admin = require('../models/order');
+const Admin = require('../models/admin');
+const Notification = require('../models/notification');
 const session = require('express-session');
 const bcrypt = require("bcrypt")
 const mongoose = require('mongoose');
@@ -514,10 +515,62 @@ userRouter.post('/user/purchase', async (req, res) => {
         user.history.push(savedOrder);
         await user.save();
 
+        const notification = new Notification({
+            object: `New Order Placed`,
+            body: `User ${user.username} has placed a new order with ID ${savedOrder._id}.`
+        });
+        await notification.save();
+    
+        const admins = await Admin.find();
+        const adminUpdates = admins.map(admin =>
+            Admin.findByIdAndUpdate(
+                admin._id,
+                { $push: { notifications: notification._id } }
+            )
+        );
+
+        await Promise.all(adminUpdates);
+
         console.log('Order placed successfully:', savedOrder);
         return res.status(200).json({ success: true, message: 'Order placed successfully', order: savedOrder });
     } catch (error) {
         console.error('Error placing order:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+userRouter.get('/user/userData', (req, res) => {
+    User.findOne({ _id: req.session.user._id })
+        .populate('notifications') 
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.status(200).json({ notifications: user.notifications });
+        })
+        .catch(err => {
+            console.error('Error finding user:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
+userRouter.post('/user/deleteNotification', async (req, res) => {
+    const { notificationId } = req.body;
+
+    try {
+        const user = await User.findOneAndUpdate(
+            { _id: req.session.user._id },
+            { $pull: { notifications: notificationId } },
+            { new: true }
+        );
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Notification removed' });
+    } catch (error) {
+        console.error('Error removing notification:', error);
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 });

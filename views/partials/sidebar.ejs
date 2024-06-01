@@ -20,7 +20,7 @@
             </a>
         </li>
         <li>
-            <a href="/user/notifications">
+            <a href="#" id="notifications-link">
                 <i class="fa-sharp fa-solid fa-bell" style="color: #ffffff;"></i>
                 <span class="label">Notifications</span>
             </a>
@@ -58,7 +58,44 @@
     </ul>
 </div>
 
+<div class="notifications" id="notifications">
+</div>
+
 <style>
+    .notifications {
+        background-color: rgba(223, 220, 220, 0.468);
+        border-radius: 10px;
+        width: 350px;
+        height: 430px;
+        position: fixed;
+        left: 90px;
+        bottom: 10px;
+        padding: 10px;
+        display: none;
+        backdrop-filter: blur(10px);
+    }
+    .notif {
+    background-color: rgb(255, 255, 255);
+    margin: 10px;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a shadow */
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    }
+
+    .notif p {
+        margin: 2px;
+    }
+
+    .notif i {
+        color: #000000;
+        cursor: pointer;
+    }
+    .notifications.show {
+        display: block;
+    }
     .sidebar {
         height: 100%;
         width: 80px;
@@ -152,5 +189,79 @@
         display: none;
     }
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const notificationsLink = document.getElementById("notifications-link");
+        const notificationsDiv = document.getElementById("notifications");
 
+        notificationsLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        notificationsDiv.classList.toggle("show"); 
+
+            if (notificationsDiv.classList.contains("show")) {
+                fetch('/user/userData')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.notifications && data.notifications.length > 0) {
+                            renderNotifications(data.notifications);
+                        } else {
+                            notificationsDiv.innerHTML = "<p>No notifications</p>";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            }
+        });
+
+
+        function renderNotifications(notifications) {
+            notificationsDiv.innerHTML = "";
+            
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement("div");
+                notificationElement.id = notification._id;
+                notificationElement.classList.add("notification");
+                notificationElement.innerHTML = `
+                <div class = "notif">
+                    <p>${notification.body}</p>
+                    <i class="fa-solid fa-trash" style="color: #000000;"></i>
+                </div>
+                `;
+                notificationsDiv.appendChild(notificationElement);
+                const trashIcon = notificationElement.querySelector('.fa-trash');
+                trashIcon.addEventListener('click', function() {
+                    deleteNotification(notification._id);
+                });
+            });
+        }
+
+        function deleteNotification(notificationId) {
+            fetch('/user/deleteNotification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ notificationId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete notification');
+                }
+                console.log('Notification deleted successfully');
+                const notificationElement = document.getElementById(notificationId);
+                notificationElement.remove();
+
+            })
+            .catch(error => {
+                console.error('Error deleting notification:', error);
+            });
+        }
+    });
+</script>
 <script src="https://kit.fontawesome.com/dcdd24e255.js" crossorigin="anonymous"></script>
