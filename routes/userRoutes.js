@@ -377,6 +377,38 @@ userRouter.post('/user/addToFavorites', async (req, res) => {
     }
 });
 
+userRouter.post('/user/likeComment', async (req, res) => {
+    try {
+        const { commentId } = req.body;
+
+        if (!req.session.user) {
+            console.log("User not authenticated");
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        const userId = req.session.user._id; 
+        const user = await User.findById(userId);
+        if (!user) {
+            console.log("User not found");
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            console.log("Comment not found");
+            return res.status(404).json({ success: false, message: 'Comment not found' });
+        }
+
+        comment.likes += 1;
+        await comment.save();
+
+        res.status(200).json({ success: true, message: 'Book added to favorites' });
+    } catch (error) {
+        console.error('Error adding book to favorites:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
+
 userRouter.post('/user/removeFromFavorites', async (req, res) => {
     const { bookId } = req.body;
 

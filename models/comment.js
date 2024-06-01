@@ -12,6 +12,10 @@ const commentSchema = new schema({
     book: {
         type: schema.Types.ObjectId,
         ref: 'Book',
+    },
+    likes: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
