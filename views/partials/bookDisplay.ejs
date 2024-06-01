@@ -27,7 +27,7 @@
                 <p><%= categoriesString %></p>
         <% } %>
         <p><strong><%= book.price %></strong> $</p>
-        <% if (book.availableCopies == 0) { %>
+        <% if (book.availableCopies <= 0) { %>
             <p class="unavailableMark">Unavailable</p>
         <% } %>
     </div>

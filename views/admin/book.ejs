@@ -39,6 +39,7 @@
                                 <p><%= categoriesString %></p>
                         <% } %>
                         <p><strong><%= book.price %></strong> $</p>
+                        <p><strong><%= book.availableCopies %></strong> copies left</p>
                     </div>
                     <div class="options">
                         <a href="/admin/home" class="deleteBook" data-doc="<%= book._id %>">Delete Book</a>
