@@ -17,7 +17,7 @@
         <% let outOfStockExists = false; %>
         <% if (books.length > 0) { %>
             <% books.forEach(book => { %>
-                <% if (book.availableCopies == 0) { %>
+                <% if (book.availableCopies <= 0) { %>
                     <% outOfStockExists = true; %>
                 <% } %>
             <% }) %>
@@ -29,7 +29,7 @@
             <div class="outOfStock">
                 <% if (books.length > 0) { %>
                     <% books.forEach(book => { %>
-                        <% if (book.availableCopies == 0) { %>
+                        <% if (book.availableCopies <= 0) { %>
                             <%- include('../partials/adminBookDisplay', { book: book, userType: 'admin' }) %>
                         <% } %>
                     <% }) %>
