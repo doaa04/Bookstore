@@ -211,7 +211,7 @@ adminRouter.post('/admin/deleteOrder', async (req, res) => {
         console.log(admin.delivered);
 
         if (!admin) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'Admin not found' });
         }
 
         return res.status(200).json({ success: true, message: 'Order removed' });
@@ -224,7 +224,7 @@ adminRouter.post('/admin/deleteOrder', async (req, res) => {
 adminRouter.get("/admin/dashboard", isAuthenticated, async (req, res) => {
     try {
         if (!req.session.admin) {
-            res.redirect('/user/login');    
+            res.redirect('/admin/login');    
         } else {
             res.render('admin/dashboard')
         }
@@ -234,9 +234,41 @@ adminRouter.get("/admin/dashboard", isAuthenticated, async (req, res) => {
     }
 });
 
-adminRouter.get('/admin/notifications', isAuthenticated, (req, res) => {
-    res.render('admin/notifications');
-})
+adminRouter.get('/admin/adminData', (req, res) => {
+    Admin.findOne({ _id: req.session.admin._id })
+        .populate('notifications') 
+        .then(admin => {
+            if (!admin) {
+                return res.status(404).json({ message: 'Admin not found' });
+            }
+            res.status(200).json({ notifications: admin.notifications });
+        })
+        .catch(err => {
+            console.error('Error finding admin:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
+adminRouter.post('/admin/deleteNotification', async (req, res) => {
+    const { notificationId } = req.body;
+
+    try {
+        const admin = await Admin.findOneAndUpdate(
+            { _id: req.session.admin._id },
+            { $pull: { notifications: notificationId } },
+            { new: true }
+        );
+        
+        if (!admin) {
+            return res.status(404).json({ success: false, message: 'Admin not found' });
+        }
+
+        return res.status(200).json({ success: true, message: 'Notification removed' });
+    } catch (error) {
+        console.error('Error removing notification:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
 
 adminRouter.get('/admin/settings', isAuthenticated, (req, res) => {
     res.render('admin/settings');
