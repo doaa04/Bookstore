@@ -4,10 +4,12 @@ const schema = mongoose.Schema;
 const commentSchema = new schema({
     content: {
         type: String,
+        required: true
     },
     user: {
         type: schema.Types.ObjectId,
         ref: 'User',
+        required: true
     },
     book: {
         type: schema.Types.ObjectId,
@@ -20,5 +22,5 @@ const commentSchema = new schema({
 }, { timestamps: true });
 
 
-const Comment = mongoose.model('Comment', commentSchema);
+const Comment = mongoose.model('Message', commentSchema);
 module.exports = Comment;

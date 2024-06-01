@@ -1,9 +1,6 @@
 .book {
     display: block;
 }
-.book div {
-    margin-top: 20px;
-}
 .coverAndDetails {
     display: flex;
 }
