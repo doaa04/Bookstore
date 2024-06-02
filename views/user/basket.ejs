@@ -241,7 +241,7 @@
     });
 
     document.querySelector('.purchaseBtn').addEventListener('click', function() {
-        var totalPrice = parseFloat(document.getElementById('totalPrice').innerText) * 100; // Convert to cents
+        var totalPrice = parseFloat(document.getElementById('totalPrice').innerText) * 100; 
         stripeHandler.open({
             amount: totalPrice,
             name: 'JupiReads',

@@ -24,14 +24,15 @@
             <p><strong>Phone number: </strong><%= user.phoneNumber %></p>
         </div>
         <div class="options">
-            <a href="#" class="editProfile">Edit Profile</a>
+            <a href="/user/settings" class="editProfile">Edit Profile</a>
         </div>
-        <div class="account-info">
-            <% if (user.history.length === 0) { %>
+        <% if (user.history.length === 0) { %>
+            <div class="account-info">
                 <h3>You currently don't own any books, but you may find one you like here. Check out our best sellers!</h3>
                 <a href="/user/home">Find something interesting here.</a>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
+        
     </div>
 
     <%- include('../partials/footer') %>
