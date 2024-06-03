@@ -271,9 +271,19 @@ adminRouter.post('/admin/deleteNotification', async (req, res) => {
     }
 });
 
-adminRouter.get('/admin/settings', isAuthenticated, (req, res) => {
-    res.render('admin/settings');
-})
+adminRouter.get("/admin/settings", isAuthenticated, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.session.admin);
+        if (admin) {
+            res.render('admin/settings', { admin: admin });
+        } else {
+            res.redirect('/admin/login');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 //dash 
 adminRouter.get('/stats', async (req, res) => {
@@ -287,6 +297,41 @@ adminRouter.get('/stats', async (req, res) => {
 });
 adminRouter.get('/admin/stats', isAuthenticated, adminController.getAdminStats);
 
+adminRouter.post('/admin/updateProfile', isAuthenticated, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.session.admin._id);
+
+        if (!admin) {
+            return res.status(404).render('admin/settings', { error: 'Admin not found' });
+        }
+
+        const { email, currentPassword, newPassword, confirmPassword } = req.body;
+
+        // Check if current password matches
+        const isMatch = await bcrypt.compare(currentPassword, admin.password);
+        if (!isMatch) {
+            return res.status(400).render('admin/settings', { error: 'Incorrect current password', admin: admin });
+        }
+
+        // Update admin details
+        admin.email = email;
+
+        // Update password if new password is provided
+        if (newPassword) {
+            if (newPassword !== confirmPassword) {
+                return res.status(400).render('admin/settings', { error: 'New passwords do not match', admin: admin });
+            }
+            admin.password = await bcrypt.hash(newPassword, 10);
+        }
+
+        await admin.save();
+        res.render('admin/settings', { success: 'Profile updated successfully', admin: admin });
+
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).render('admin/settings', { error: 'Internal Server Error', admin: req.session.admin });
+    }
+});
 
 // exporting the router
 module.exports = adminRouter; 

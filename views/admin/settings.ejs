@@ -14,10 +14,81 @@
     <%- include('../partials/adminSidebar') %>
 
     <div class="content">
-        <h1>Settings</h1>
+        <div class="settings-container">
+            <h1>Settings</h1>
+            <% if (typeof error !== 'undefined') { %>
+                <div class="error-message"><%= error %></div>
+            <% } %>
+            <% if (typeof success !== 'undefined') { %>
+                <div class="success-message"><%= success %></div>
+            <% } %>
+            <form action="/admin/updateProfile" method="POST">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<%= admin.email %>" required>
+
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword">
+
+                <label for="confirmPassword">Confirm New Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword">
+
+                <button type="submit">Update Profile</button>
+            </form>
+        </div>
     </div>
 
     <%- include('../partials/footerA') %>
 
 </body>
+<style>
+    .settings-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .settings-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .settings-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .settings-container form label {
+        margin: 10px 0 5px;
+    }
+    .settings-container form input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .settings-container form button {
+        padding: 10px;
+        background: rgba(255, 210, 0, 1);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .settings-container form button:hover {
+        background: #0056b3;
+    }
+    .error-message {
+        color: red;
+        margin-bottom: 10px;
+    }
+    .success-message {
+        color: green;
+        margin-bottom: 10px;
+    }
+</style>
 </html>
