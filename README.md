@@ -21,12 +21,6 @@ Welcome to the Bookstore Website project! Immerse yourself in our full-stack web
 
 - **MongoDB**: Storing data in a flexible, NoSQL format.
 
-### Development Tools
-
-- **Visual Studio Code (VSCode)**: Our preferred code editor.
-- **Git**: Keeping our project's version history organized.
-- **GitHub**: Enabling collaboration and code sharing with the community.
-
 ## 🚀 Features
 
 - **User Authentication**: Secure sign-up, login, and logout functionalities.
